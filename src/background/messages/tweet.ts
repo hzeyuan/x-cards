@@ -5,7 +5,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     const action = req.body.action;
     if (action === 'get-tweet') {
         const url = req.body.url;
-        const response = await fetch(`https://cmt.itsvg.in/api?url=${url}`, {
+        const response = await fetch(`https://x-cards.net/api/x?url=${url}`, {
             method: 'GET',
 
         });
@@ -14,7 +14,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
         }
         const data = await response.json();
 
-        return res.send(data);
+        return res.send(data.data);
     }
 
 }

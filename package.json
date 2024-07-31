@@ -91,21 +91,12 @@
   },
   "manifest": {
     "permissions": [
-      "scripting"
-    ],
-    "web_accessible_resources": [
-      {
-        "resources": [
-          "@lib/html-to-image.js"
-        ],
-        "matches": [
-          "https://x.com/*"
-        ]
-      }
+      "scripting",
+      "https://x-cards.net/*"
     ],
     "host_permissions": [
-      "https://x-cards.vercel.app",
-      "https://x.com"
+      "https://x.com",
+      "https://x-cards.net/*"
     ]
   }
 }

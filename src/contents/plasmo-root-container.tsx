@@ -132,8 +132,8 @@ const PlasmoInline = ({ anchor }) => {
 
             const tweetUrl = getTweetUrl(cardHeaderPanelNode);
             tweetUrlRef.current = tweetUrl;
+            console.log('tweetUrl', tweetUrl);
             if (!tweetUrl) throw new Error('Tweet URL not found');
-
             const res = await sendToBackground({
                 name: 'tweet',
                 body: {
