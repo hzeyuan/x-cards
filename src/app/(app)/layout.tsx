@@ -17,7 +17,7 @@ const AppLayout = ({ children }) => {
                         tweet cards also support the chrome extension version.{" "}
                         <a
                             className="underline flex items-center"
-                            href="https://static.usesless.com/tweet-cards/chrome-mv3-prod.zip"
+                            href="https://static.usesless.com/x-cards/chrome-mv3-prod.zip"
                             target="_blank"
                         >
                             <span className="ml-2 text-xs">Get Chrome Extension →</span>

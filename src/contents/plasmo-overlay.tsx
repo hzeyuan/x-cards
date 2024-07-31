@@ -11,7 +11,7 @@ const PlasmoOverlay = ({ anchor }: PlasmoCSUIProps) => {
     return (
         <iframe
             id="x-card-ai"
-            src="http://localhost:1947"
+            src="https://x-cards.vercel.app"
             width={window.outerWidth} height={'99999px'}
             style={{
                 position: 'absolute',

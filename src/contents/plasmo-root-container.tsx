@@ -108,7 +108,7 @@ const PlasmoInline = ({ anchor }) => {
         iframe.contentWindow.postMessage({
             action: 'generate-card-local-request',
             body: data,
-        }, 'http://localhost:1947');
+        }, '*');
     };
 
     const handleClick = async (e) => {
