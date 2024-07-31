@@ -1,5 +1,4 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
-import Browser from "webextension-polyfill";
 import * as _ from 'lodash-es'
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     const action = req.body.action;

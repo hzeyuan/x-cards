@@ -1,10 +1,12 @@
 import cssText from "data-text:@src/contents/x.css"
 
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor, PlasmoGetInlineAnchorList, PlasmoGetOverlayAnchor } from "plasmo"
-import sonner from "sonner"
-import { sendToBackground } from '@plasmohq/messaging';
+// import sonner from "sonner"
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { useToast } from "@components/ui/use-toast";
+import type { XConfig } from "@src/hooks/useCardStore";
+import { extractTweetInfo } from "@src/app/utils";
+import pRetry from 'p-retry';
 export const config: PlasmoCSConfig = {
     matches: ["https://x.com/*"],
 }
@@ -17,20 +19,6 @@ export const getStyle = () => {
     return style
 }
 
-
-
-// export const getInlineAnchor: PlasmoGetInlineAnchor = async () => { // document.querySelector(`h1`)
-//     const targetSVG = document.querySelectorAll('path[d^="M12 2.59l5.7 5.7-1.41 1"]');
-//     // console.log('targetSVG', targetSVG)
-//     // 往上找到第一个父类的button
-//     const buttonElement = targetSVG && targetSVG.closest('button')
-//     // console.log('buttonElement', buttonElement);
-//     const li = buttonElement?.parentNode?.parentNode
-//     //在li的统层级下添加一个div
-
-//     // console.log('li', li);
-//     return li
-// }
 
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => { // document.querySelector(`h1`)
     const targetSVGList = document.querySelectorAll('path[d^="M12 2.59l5.7 5.7-1.41 1"]');
@@ -50,35 +38,32 @@ export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => { // d
     return l;
 }
 
-// export const getOverlayAnchor: PlasmoGetOverlayAnchor = async () => { // document.querySelector(`h1`)
-//     const targetSVG = document.querySelector('path[d^="M12 2.59l5.7 5.7-1.41 1"]');
-//     // console.log('targetSVG', targetSVG)
-//     // 往上找到第一个父类的button
-//     const buttonElement = targetSVG && targetSVG.closest('button')
-//     // console.log('buttonElement', buttonElement);
-//     const li = buttonElement?.parentNode?.parentNode
-//     //在li的统层级下添加一个div
-
-//     // console.log('li', li);
-//     return li
-// }
-
-
 
 
 const PlasmoInline = ({ anchor }) => {
 
     const [isLoading, setIsLoading] = useState(false);
-    const tweetUrlRef = useRef(null);
+    const tweetInfoRef = useRef<XConfig>(null);
+    const iframeLoadedCompletedRef = useRef(false);
+    const { toast } = useToast()
     const handleMessage = useCallback((event) => {
         try {
             const { url, dataUrl } = event.data?.value || {};
-            // console.log('tweetUrlRef.current', tweetUrlRef.current, url);
-            if (event.data.action === 'generate-card-local-response' && tweetUrlRef.current === url) {
+            if (event.data.action === 'generate-card-local-response' && tweetInfoRef.current?.url === url) {
                 console.log('Received data from iframe:', event.data.value);
                 downloadImage(dataUrl);
+                toast({
+                    style: {
+                        border: 'none',
+                        background: '#07bc0c',
+                        color: '#fff',
+                    },
+                    title: 'Card generated',
+                    description: 'The card has been generated and downloaded.',
+                });
                 setIsLoading(false);
             }
+
         } catch (error) {
 
         }
@@ -92,70 +77,86 @@ const PlasmoInline = ({ anchor }) => {
 
     const downloadImage = (dataUrl) => {
         const link = document.createElement('a');
-        link.download = `export.png`;
+        const xName = tweetInfoRef.current.text.slice(0, 10) || 'x-card';
+        link.download = `${xName}.png`
         link.href = dataUrl;
         link.click();
     };
 
-    const getTweetUrl = (cardHeaderPanelNode) => {
-        const tweetUrlsEle = cardHeaderPanelNode.querySelectorAll('a');
-        const urls = Array.from(tweetUrlsEle).map((ele) => ele.href);
-        console.log('tweetUrls', urls);
-        return urls.find((url) => url.includes('status'));
+
+    const sendMessageToIframe = (iframe, data, timeout = 10000) => {
+        return new Promise((resolve, reject) => {
+            const timeoutId = setTimeout(() => {
+                reject(new Error('Iframe message timeout'));
+            }, timeout);
+
+            const handleResponse = (event) => {
+                const url = tweetInfoRef.current.url;
+                if (event.data.action === 'generate-card-local-response' && tweetInfoRef.current?.url === url) {
+                    clearTimeout(timeoutId);
+                    window.removeEventListener('message', handleResponse);
+                    resolve(event.data.value);
+                }
+            };
+
+            window.addEventListener('message', handleResponse);
+
+            iframe.contentWindow.postMessage({
+                action: 'generate-card-local-request',
+                body: {
+                    ...data,
+                }
+            }, '*');
+        });
     };
 
-    const sendMessageToIframe = (iframe, data) => {
-        iframe.contentWindow.postMessage({
-            action: 'generate-card-local-request',
-            body: data,
-        }, '*');
-    };
+
 
     const handleClick = async (e) => {
         e.stopPropagation();
         e.preventDefault();
+
+        const articleElement = anchor.element.closest('article[data-testid="tweet"]');
+        const tweetInfo = extractTweetInfo(articleElement);
+        console.log(tweetInfo);
+        tweetInfoRef.current = tweetInfo;
+
         if (isLoading) return;
-
         setIsLoading(true);
-
         try {
-            console.log('click');
             const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot;
             if (!shadowRoot) throw new Error('Shadow root not found');
 
             const iframe = shadowRoot.getElementById('x-card-ai') as HTMLIFrameElement;
             if (!iframe) throw new Error('Iframe not found');
 
-            const cardFooterPanelNode = anchor.element.parentNode.parentNode.parentNode;
-            const cardInfoPanelNodeList = cardFooterPanelNode.parentNode.childNodes;
-            const cardHeaderPanelNode = cardInfoPanelNodeList[0];
 
-            const tweetUrl = getTweetUrl(cardHeaderPanelNode);
-            tweetUrlRef.current = tweetUrl;
-            console.log('tweetUrl', tweetUrl);
-            if (!tweetUrl) throw new Error('Tweet URL not found');
-            const res = await sendToBackground({
-                name: 'tweet',
-                body: {
-                    action: 'get-tweet',
-                    url: tweetUrl
-                }
-            });
+            console.log('Sending message to iframe:', tweetInfo);
+            await pRetry(async () => {
+                await sendMessageToIframe(iframe, {
+                    ...tweetInfo,
+                }, 5000)
+            }, {
+                retries: 3,
+            }).catch(err => {
+                console.error('Error sending message to iframe:', err);
+                toast({
+                    title: 'Card generation failed',
+                    description: 'An error occurred while generating the card.',
+                    variant: 'destructive'
+                });
+                setIsLoading(false);
+            })
 
-            if (res.error) throw new Error(res.error);
 
-            console.log('Background response:', res);
-            sendMessageToIframe(iframe, {
-                url: tweetUrl,
-                ...res,
-            });
+            // sendMessageToIframe(iframe, {
+            //     ...tweetInfo,
+            // }, 10000)
         } catch (error) {
             console.error("Error generating card:", error);
             setIsLoading(false);
         }
     }
-
-
 
     return (
         <div
@@ -163,7 +164,6 @@ const PlasmoInline = ({ anchor }) => {
             onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                console.log('click');
                 handleClick(e);
                 // sonner.toast('click');
             }}
@@ -181,10 +181,23 @@ const PlasmoInline = ({ anchor }) => {
                     style={{ textOverflow: "unset" }}
                 >
                     {isLoading ? (
-                        <svg className="animate-spin" width="22.5" height="22.5" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                            className="animate-spin"
+                            viewBox="0 0 1024 1024"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={22.5}
+                            height={22.5}
+                        >
+                            <path
+                                d="M512 128a384 384 0 01384 384 384 384 0 01-384 384 384 384 0 01-384-384 384 384 0 01384-384zm0 115.2a268.8 268.8 0 100 537.6 268.8 268.8 0 000-537.6z"
+                                fillOpacity={0.05}
+                            />
+                            <path
+                                d="M781.696 794.24A390.272 390.272 0 00229.76 242.304a58.539 58.539 0 0082.773 82.773 273.195 273.195 0 11386.39 386.39 58.539 58.539 0 0082.773 82.773z"
+                                fill="#768294"
+                            />
                         </svg>
+
                     ) : (
                         <svg
                             style={{
@@ -213,3 +226,5 @@ const PlasmoInline = ({ anchor }) => {
 }
 
 export default PlasmoInline
+
+

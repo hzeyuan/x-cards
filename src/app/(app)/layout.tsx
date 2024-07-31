@@ -14,7 +14,7 @@ const AppLayout = ({ children }) => {
                 <div className="bg-gradient-to-br from-green-300 via-blue-500 to-purple-600 fixed w-full px-4 py-2 text-white !bg-gradient-to-r">
                     <p className="flex items-center justify-center text-sm font-medium !text-white">
                         {" "}
-                        tweet cards also support the chrome extension version.{" "}
+                        X cards also support the chrome extension version.{" "}
                         <a
                             className="underline flex items-center"
                             href="https://static.usesless.com/x-cards/chrome-mv3-prod.zip"
@@ -27,8 +27,8 @@ const AppLayout = ({ children }) => {
                 <div className=" relative  top-[57px] container flex h-14 max-w-screen-2xl items-center">
                     <div className="mr-4 hidden md:flex">
                         <a className="mr-6 flex items-center space-x-2" href="/">
-                            <Image className='w-8 h-8' alt="logo" src={Logo} width={32} ></Image>
-                            <span className="hidden  sm:inline-block  whitespace-nowrap">Tweet Cards</span>
+                            <Image className='w-6 h-6' alt="logo" src={Logo} width={24} ></Image>
+                            <span className="hidden  sm:inline-block  whitespace-nowrap">X Cards</span>
                         </a>
                     </div>
                     <div className="w-full flex justify-center">
@@ -79,7 +79,7 @@ const AppLayout = ({ children }) => {
                             <a
                                 target="_blank"
                                 rel="noreferrer"
-                                href="https://github.com/hzeyuan/bookmarksAI"
+                                href="https://github.com/hzeyuan/tweet-cards"
                             >
                                 <div className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 py-2 w-9 px-0">
                                     <svg viewBox="0 0 438.549 438.549" className="h-4 w-4">

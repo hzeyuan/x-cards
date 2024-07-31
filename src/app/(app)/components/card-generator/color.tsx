@@ -9,6 +9,12 @@ import { ColorPicker } from "@components/ui/color-picker";
 export const presets: PresetType[] = [
     {
         backgroundFillType: "Linear",
+        backgroundStartColor: "#FF7DB4",
+        backgroundEndColor: "#654EA3",
+        backgroundAngle: 45,
+    },
+    {
+        backgroundFillType: "Linear",
         backgroundStartColor: "#8E2DE2",
         backgroundEndColor: "#4A00E0",
         backgroundAngle: 45,
@@ -43,12 +49,7 @@ export const presets: PresetType[] = [
         backgroundEndColor: "#EC2F4B",
         backgroundAngle: 45,
     },
-    {
-        backgroundFillType: "Linear",
-        backgroundStartColor: "#FF7DB4",
-        backgroundEndColor: "#654EA3",
-        backgroundAngle: 45,
-    },
+
     {
         backgroundFillType: "Linear",
         backgroundStartColor: "#00B4DB",

@@ -1,17 +1,8 @@
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion";
 
-import { toPng, toJpeg, toSvg } from 'html-to-image';
 import { Button } from "@components/ui/button";
-import { useEffect } from "react";
-import { useCardStore, type XConfig } from "@src/hooks/useCardStore";
 import { exportImage } from "@src/app/utils";
 export const ExportTab = () => {
-
-
-
-
-
-
 
 
     return (

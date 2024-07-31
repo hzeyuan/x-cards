@@ -1,17 +1,28 @@
+import type { ImageLayoutProps } from '@src/app/(app)/components/ImageLayout';
 import { create } from 'zustand'
 
 
 type Frame = 'none' | 'macos' | 'windows'
 
 export interface XConfig {
+    url: string;
     avatar: string,
     username: string,
     text: string,
+    links?: {
+        href: string,
+        text: string,
+    }[],
+    video?: {
+        src: string,
+        poster: string,
+    },
+    tags?: string[],
+    images: string[],
     replies: number,
     likes: number,
     shares: number,
     time: number,
-    imgUrl?: string,
 }
 
 export interface CardStore {
@@ -45,6 +56,7 @@ export interface CardStore {
     },
     cardStyles: {
         width: number,
+        imageLayout?: ImageLayoutProps['layout'],
         scale: number,
         fontSize: number,
         borderRadius: number,
@@ -76,9 +88,13 @@ export interface CardStore {
 export const useCardStore = create<CardStore>(
     (set, get) => ({
         xConfig: {
-            username: 'XXX',
+            username: '@FeigelC35583',
+            images: [],
+            // images: ['https://pbs.twimg.com/media/GTzQPUhbQAA0mwk?format=jpg&name=small'],
+            // images: ['https://pbs.twimg.com/media/GTzQPUhbQAA0mwk?format=jpg&name=small', 'https://pbs.twimg.com/media/GTzQPUhbQAA0mwk?format=jpg&name=small'],
+            url: '',
             avatar: 'https://pbs.twimg.com/profile_images/1742189088244121600/GGSioEt-_400x400.jpg',
-            text: '这是一个项目他可以的哦啊实打实多撒寄快递花洒扩大会开发很大刷卡机发哈打撒开发回答是开发回答说会计法很大说法看哈手打发卡机等哈刷卡机和',
+            text: 'Capture and share Twitter posts as beautiful images. makes sharing Twitter posts on other platforms more visual and attention-grabbing.',
             replies: 6,
             likes: 6,
             shares: 6,
@@ -147,7 +163,7 @@ export const useCardStore = create<CardStore>(
         },
         cardStyles: {
             // backgroundColor: 'rgba(255, 255, 255, 1)',
-            width: 420,
+            width: 582.547,
             // height: 100,
             borderRadius: 20,
             fontSize: 16,
@@ -209,7 +225,7 @@ export const useCardStore = create<CardStore>(
                 },
             },
             cardStyles: {
-                width: 420,
+                width: 582.547,
                 // height: 100,
                 borderRadius: 20,
                 fontSize: 16,

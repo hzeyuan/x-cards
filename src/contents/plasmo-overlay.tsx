@@ -8,6 +8,7 @@ export const config: PlasmoCSConfig = {
 const PlasmoOverlay: React.FC<PlasmoCSUIProps> = ({ anchor }) => {
     const iframeRef = useRef<HTMLIFrameElement>(null)
 
+    console.log('PlasmoOverlay mounted')
     useEffect(() => {
         const handleResize = () => {
             if (iframeRef.current) {
@@ -15,11 +16,11 @@ const PlasmoOverlay: React.FC<PlasmoCSUIProps> = ({ anchor }) => {
             }
         }
 
-        window.addEventListener('resize', handleResize)
         handleResize() // Initial resize
 
         return () => {
             window.removeEventListener('resize', handleResize)
+            localStorage.removeItem('x-card-ai')
         }
     }, [])
 
@@ -37,6 +38,7 @@ const PlasmoOverlay: React.FC<PlasmoCSUIProps> = ({ anchor }) => {
                 ref={iframeRef}
                 id="x-card-ai"
                 src="https://x-cards.net"
+                // src="http://localhost:1947"
                 style={{
                     width: '100%',
                     height: '100%',

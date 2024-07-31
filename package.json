@@ -90,13 +90,16 @@
     "typescript": "5.3.3"
   },
   "manifest": {
+    "key": "$CRX_PUBLIC_KEY",
     "permissions": [
       "scripting",
-      "https://x-cards.net/*"
+      "https://x-cards.net/*",
+      "http://localhost:1947"
     ],
     "host_permissions": [
       "https://x.com",
-      "https://x-cards.net/*"
+      "https://x-cards.net/*",
+      "http://localhost:1947"
     ]
   }
 }

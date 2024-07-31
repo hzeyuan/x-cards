@@ -6,7 +6,7 @@ const Hero = () => {
         <>
             <div className="relative mx-auto flex max-w-2xl flex-col items-center">
                 <h2 className="text-center text-3xl font-medium text-gray-900 dark:text-gray-50 sm:text-6xl">
-                    Tweet {' '}
+                    X {' '}
                     <span className="animate-text-gradient inline-flex bg-gradient-to-r from-neutral-900 via-slate-500 to-neutral-500 bg-[200%_auto] bg-clip-text leading-tight text-transparent dark:from-neutral-100 dark:via-slate-400 dark:to-neutral-400">
                         Cards
                     </span>
