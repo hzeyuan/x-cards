@@ -2,7 +2,14 @@
   "name": "x-card",
   "displayName": "X Card",
   "version": "0.0.1",
-  "description": "X Card is a simple tool to create beautiful tweet cards for your tweets.",
+  "description": "Easy share  X,anywhere,in any format",
+  "keywords": [
+    "x",
+    "card",
+    "share",
+    "anywhere",
+    "anyformat"
+  ],
   "author": "yixtotieq@gmail.com",
   "scripts": {
     "dev": "run-p dev:*",
