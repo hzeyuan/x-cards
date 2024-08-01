@@ -41,6 +41,13 @@
 
 X is a source of information for many platforms，So this project came into being
 
+## features
+
+* Easy to access, just a simple click away.
+* Obtain videos, images, text, likes, and browsing history effortlessly.
+* Export in multiple formats, including JSON, Markdown, PNG, JPEG, and SVG.
+* Template feature to save your frequently used card styles.
+
 <br/>
 
 ## How to Use
