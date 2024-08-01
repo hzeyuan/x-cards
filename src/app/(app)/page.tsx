@@ -4,6 +4,7 @@ import * as _ from 'lodash-es';
 import Hero from "./components/hero";
 import { CardGenerator } from "./components/card-generator";
 import { cn } from "@lib/utils";
+import gradientBottomSvg from '@assets/gradient-bottom.svg';
 
 const HomePage = () => {
 
@@ -25,10 +26,16 @@ const HomePage = () => {
                 />
             </div>
 
-            <div className={cn(
-                "absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black  [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]",
-                ` bg-[url('https://cdn.prod.website-files.com/66a3e3bd14091f433acdfb36/66a3e5321947f7c29785ab2c_radial%20gradient%20bottom.svg')] bg-no-repeat bg-cover bg-[50%_100%]`
-            )}></div>
+            <div
+                style={{
+                    background: `url('${gradientBottomSvg.src}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: '50% 100%',
+                }}
+                className={cn(
+                    "absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black  [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]",
+                    ` bg-no-repeat bg-cover bg-[50%_100%]`
+                )}></div>
             <div className="  mx-auto w-full max-w-7xl px-6 md:px-8 lg:px-12">
                 <div className="pt-8">
                     <Hero />
