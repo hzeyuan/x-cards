@@ -28,38 +28,6 @@ export function formatTimestamp(timestamp: number): string {
 }
 
 
-
-function extractNodeInfo(node) {
-  let results = [];
-
-  // 递归函数，用于处理单个节点
-  function traverse(node) {
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      const element = node;
-
-      // 如果节点是图片，提取src
-      if (element.tagName === "IMG") {
-        const img = element as HTMLImageElement;
-        results.push({ type: "image", src: img.src, alt: img.alt || "" });
-      }
-
-      // 遍历并处理所有子节点
-      element.childNodes.forEach(child => traverse(child));
-    } else if (node.nodeType === Node.TEXT_NODE) {
-      // 提取文本节点的内容
-      const textContent = node.textContent?.trim();
-      if (textContent) {
-        results.push({ type: "text", content: textContent });
-      }
-    }
-  }
-
-  // 开始遍历传入的节点
-  traverse(node);
-
-  return results;
-}
-
 export const generateImage = async (options: {
   data?: XConfig,
   format: string
@@ -67,7 +35,6 @@ export const generateImage = async (options: {
 
   const { format, data } = options;
   //await all images to load
-  console.log('data', data);
   if (data?.images.length > 0) {
     await Promise.all(data.images.map(src => {
       return new Promise((resolve, reject) => {
@@ -86,13 +53,13 @@ export const generateImage = async (options: {
     let dataUrl;
     switch (format) {
       case 'png':
-        dataUrl = await toPng(cardEle, { quality: 0.95, pixelRatio: 2 });
+        dataUrl = await toPng(cardEle, { quality: 0.95, pixelRatio: 2, width: cardEle.offsetWidth, height: cardEle.offsetHeight });
         break;
       case 'jpeg':
-        dataUrl = await toJpeg(cardEle, { quality: 0.95, pixelRatio: 2 });
+        dataUrl = await toJpeg(cardEle, { quality: 0.95, width: cardEle.offsetWidth, height: cardEle.offsetHeight });
         break;
       case 'svg':
-        dataUrl = await toSvg(cardEle, { quality: 0.95, pixelRatio: 2 });
+        dataUrl = await toSvg(cardEle, { quality: 0.95, width: cardEle.offsetWidth, height: cardEle.offsetHeight });
         break;
       default:
         throw new Error('Unsupported format');
@@ -211,6 +178,56 @@ export function extractTweetInfo(articleElement) {
 
   return tweet;
 }
+
+export const exportAsMarkdown = (tweetData) => {
+  const {
+    username,
+    time,
+    text,
+    likes,
+    shares,
+    replies,
+    video,
+    images
+  } = tweetData;
+
+  const formattedDate = new Date(time * 1000).toLocaleString();
+
+  let markdownContent = `# Tweet by ${username}\n\n`;
+  markdownContent += `*Posted on ${formattedDate}*\n\n`;
+  markdownContent += `${text}\n\n`;
+
+  if (video && video.poster) {
+    markdownContent += `![Video Thumbnail](${video.poster})\n\n`;
+    markdownContent += `*This tweet contains a video*\n\n`;
+  }
+
+  if (images && images.length > 0) {
+    images.forEach((img, index) => {
+      markdownContent += `![Image ${index + 1}](${img})\n\n`;
+    });
+  }
+
+  markdownContent += `--- \n\n`;
+  markdownContent += `**Stats**\n\n`;
+  markdownContent += `Likes: ${likes}\n`;
+  markdownContent += `Shares: ${shares}\n`;
+  markdownContent += `Replies: ${replies}\n\n`;
+
+  // 创建并下载 Markdown 文件
+  const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `tweet_${username}_${time}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  return markdownContent; // 返回生成的Markdown内容，以便在需要时使用
+};
+
 
 // const getTweetUrl = async (cardHeaderPanelNode) => {
 //   const tweetUrlsEle = cardHeaderPanelNode.querySelectorAll('a');

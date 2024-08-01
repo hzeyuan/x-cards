@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react"
 import './globals.css'
 
 export const metadata = {
-  title: 'Bookmark.ai',
+  title: 'x cards',
   description: 'Rebuild your bookmarks with AI',
 }
 
@@ -26,6 +26,7 @@ export default function RootLayout({
         />
       </body>
       <Analytics />
+
     </html>
   )
 }

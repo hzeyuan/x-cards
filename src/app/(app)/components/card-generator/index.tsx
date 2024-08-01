@@ -1,8 +1,6 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion";
+import { Accordion, } from "@components/ui/accordion";
 import { Display } from "./display";
 import { useCardStore } from "@src/hooks/useCardStore";
-import { Slider } from "@components/ui/slider";
-import { ColorPicker } from "@components/ui/color-picker";
 import { BackgroundController } from "./controller/background-controller";
 import { FontController } from "./controller/font-controller";
 import { ExportTab } from "./export-tab";
@@ -14,8 +12,6 @@ import { CardController } from "./controller/card-controller";
 
 export const CardGenerator = () => {
 
-    const backgroundStyles = useCardStore((state) => state.backgroundStyles);
-    console.log('backgroundStyles', backgroundStyles);
     const resetAll = useCardStore((state) => state.resetAll);
 
     return (

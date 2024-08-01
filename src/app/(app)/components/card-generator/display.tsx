@@ -17,7 +17,6 @@ export const Display = () => {
     const finalBackgroundStyles = useMemo(() => {
         const color = presets[colorIndex]
 
-        console.log('backgroundStyles?.useGradient', backgroundStyles?.useGradient);
         if (backgroundStyles?.useGradient) {
             return {
                 backgroundImage: `linear-gradient(${backgroundStyles.backgroundGradientAngle}deg, ${backgroundStyles.backgroundStartColor}, ${backgroundStyles.backgroundEndColor})`,
@@ -46,7 +45,6 @@ export const Display = () => {
         }
     }, [colorIndex, backgroundStyles, tabConfig.openCustomColor])
 
-    console.log('xConfig', xConfig);
 
     return (
         <TwitterCard

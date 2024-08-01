@@ -3,60 +3,40 @@ import React, { useEffect } from "react"
 import * as _ from 'lodash-es';
 import Hero from "./components/hero";
 import { CardGenerator } from "./components/card-generator";
-import { XForm } from "./components/x-form";
-
-import { useCardStore, type XConfig } from "@src/hooks/useCardStore";
-import { generateImage } from "../utils";
-
+import { cn } from "@lib/utils";
 
 const HomePage = () => {
 
-    useEffect(() => {
-        const fn = async (event) => {
-            // 安全性检查：确保消息来自预期的源
-            // if (event.origin !== 'https://x-cards.net') return;
-            const actionName = 'generate-card-local-request'
-            if (event.data.action === actionName) {
-                console.log('收到消息来自', event.data, event.origin);
-                // console.log('event.data.messageId', event.data.messageId, lastProcessedMessageId)
-                // lastProcessedMessageId = event.data.messageId;
-                const body = event.data.body as XConfig;
-                console.log('body', body);
-                useCardStore.getState().setXConfig({
-                    ...body,
-                })
-                const dataUrl = await generateImage({
-                    data: body,
-                    format: 'png'
-                });
-                event.source.postMessage({
-                    action: 'generate-card-local-response', value: {
-                        url: body.url,
-                        dataUrl: dataUrl
-                    }
-                }, event.origin);
-            }
-        }
-        window.addEventListener('message', fn);
-
-        return () => {
-            window.removeEventListener('message', fn);
-        }
-
-    }, [])
-
     return (
-        <div className="relative h-full w-full bg-white">
-            {/* <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div> */}
+        <div className=" pb-14  w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
 
-            <div className="relative mx-auto w-full max-w-7xl px-6 md:px-8 lg:px-12">
+            <div className="z-0 absolute w-80 h-60 bg-blue-400 blur-[80px] opacity-30 top-40 left-40"></div>
+            <div className="z-0 absolute w-80 h-60 bg-purple-400 blur-[80px] opacity-30 top-40 right-40"></div>
+            <div
+                className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+                aria-hidden="true"
+            >
+                <div
+                    className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#d797e7] to-[#75a6f5] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                    style={{
+                        clipPath:
+                            "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+                    }}
+                />
+            </div>
+
+            <div className={cn(
+                "absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black  [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]",
+                ` bg-[url('https://cdn.prod.website-files.com/66a3e3bd14091f433acdfb36/66a3e5321947f7c29785ab2c_radial%20gradient%20bottom.svg')] bg-no-repeat bg-cover bg-[50%_100%]`
+            )}></div>
+            <div className="  mx-auto w-full max-w-7xl px-6 md:px-8 lg:px-12">
                 <div className="pt-8">
                     <Hero />
                 </div>
-                <XForm></XForm>
-            </div>
-            <div className="pt-12 ">
-                <CardGenerator></CardGenerator>
+                {/* <XForm></XForm> */}
+                <div className="pt-12 ">
+                    <CardGenerator></CardGenerator>
+                </div>
             </div>
         </div>
     );

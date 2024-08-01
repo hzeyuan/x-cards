@@ -1,5 +1,7 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 import * as _ from 'lodash-es'
+
+
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     const action = req.body.action;
     if (action === 'get-tweet') {
@@ -14,7 +16,12 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
         const data = await response.json();
 
         return res.send(data.data);
-    }
+    } 
+    // else if (action === 'get-card-templates') {
+    //     const templates = await templatesStorage.getAll();
+    //     console.log('templates find in bg', templates)
+    //     return res.send(templates);
+    // }
 
 }
 export default handler;

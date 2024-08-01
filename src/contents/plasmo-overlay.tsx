@@ -1,14 +1,22 @@
 import React, { useEffect, useRef } from 'react'
 import type { PlasmoCSConfig, PlasmoCSUIProps } from "plasmo"
-
+import 'tippy.js/dist/tippy.css';
+// import '@src/app/globals.css';
 export const config: PlasmoCSConfig = {
     matches: ["https://x.com/*"],
 }
 
+
+// export const getStyle = () => {
+//     const style = document.createElement("style")
+//     style.textContent = cssText
+//     return style
+// }
+
+
 const PlasmoOverlay: React.FC<PlasmoCSUIProps> = ({ anchor }) => {
     const iframeRef = useRef<HTMLIFrameElement>(null)
 
-    console.log('PlasmoOverlay mounted')
     useEffect(() => {
         const handleResize = () => {
             if (iframeRef.current) {
@@ -16,7 +24,7 @@ const PlasmoOverlay: React.FC<PlasmoCSUIProps> = ({ anchor }) => {
             }
         }
 
-        handleResize() // Initial resize
+        handleResize()
 
         return () => {
             window.removeEventListener('resize', handleResize)
@@ -37,8 +45,8 @@ const PlasmoOverlay: React.FC<PlasmoCSUIProps> = ({ anchor }) => {
             <iframe
                 ref={iframeRef}
                 id="x-card-ai"
-                src="https://x-cards.net"
-                // src="http://localhost:1947"
+                src="https://x-cards.net/independent"
+                // src="http://localhost:1947/independent"
                 style={{
                     width: '100%',
                     height: '100%',
