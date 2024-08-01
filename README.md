@@ -74,4 +74,4 @@ npm run dev:plasmo
 
 ## Starchart
 
-[![Star History Chart](https://api.star-history.com/svg?repos=hzeyuan/bookmarksAI&type=Date)](https://star-history.com/#hzeyuan/x-cards&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=hzeyuan/x-cards&type=Date)](https://star-history.com/#hzeyuan/x-cards&Date)
