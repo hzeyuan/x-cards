@@ -27,13 +27,13 @@ export function formatTimestamp(timestamp: number): string {
   return `${formattedHours}:${formattedMinutes} ${ampm} · ${day} ${month}, ${year}`;
 }
 
-
 export const generateImage = async (options: {
   data?: XConfig,
   format: string
 }) => {
 
   const { format, data } = options;
+  
   //await all images to load
   if (data?.images.length > 0) {
     await Promise.all(data.images.map(src => {
@@ -102,7 +102,6 @@ export const exportImage = async (format: string) => {
   }
 };
 
-
 export function extractTweetInfo(articleElement) {
   const tweet: XConfig = {
     url: '',
@@ -116,8 +115,8 @@ export function extractTweetInfo(articleElement) {
     shares: 0,
     replies: 0,
     likes: 0,
-    // views: 0,
   };
+
 
   // 提取头像
   tweet.avatar = articleElement.querySelector('img[draggable="true"]').src;
@@ -131,10 +130,20 @@ export function extractTweetInfo(articleElement) {
   tweet.url = XPostUrl;
   tweet.username = userInfoDiv.querySelector('div[dir="ltr"]').textContent;
   // tweet.handle = userInfoDiv.querySelector('div[dir="ltr"] + div[dir="ltr"]').textContent;
-  const timeStr = userInfoDiv.querySelector('time').getAttribute('datetime');
-  if (timeStr) {
-    tweet.time = new Date(timeStr).getTime() / 1000;
+
+  if (window.location.href.includes('/home')) {
+    const timeStr = userInfoDiv.querySelector('time').getAttribute('datetime');
+    if (timeStr) {
+      tweet.time = new Date(timeStr).getTime() / 1000;
+    }
+  } else if (/\/status\/\d+$/.test(window.location.href)) {
+    console.log('tweet info');
+    const timeStr = articleElement.querySelector('time').getAttribute('datetime');
+    if (timeStr) {
+      tweet.time = new Date(timeStr).getTime() / 1000;
+    }
   }
+
 
   // 提取文本内容
   // tweet.text = articleElement.querySelector('[data-testid="tweetText"]').textContent;
@@ -227,6 +236,10 @@ export const exportAsMarkdown = (tweetData) => {
 
   return markdownContent; // 返回生成的Markdown内容，以便在需要时使用
 };
+
+export const exportAsAsset = () => {
+  console.log('exportAsAsset');
+}
 
 
 // const getTweetUrl = async (cardHeaderPanelNode) => {

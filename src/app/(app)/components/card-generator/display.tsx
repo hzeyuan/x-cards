@@ -1,10 +1,7 @@
-import noise1 from "@assets/noise1.png"
-import { cn } from "@lib/utils"
 import { useCardStore } from "@src/hooks/useCardStore"
 import { useMemo } from "react"
 
 import { presets } from "./color"
-import { formatTimestamp } from "@src/app/utils"
 import { TwitterCard } from "./card"
 
 export const Display = () => {

@@ -8,7 +8,8 @@
 
 [![x-cards intro](https://img.youtube.com/vi/v8iQV8ZoVBk/0.jpg)](https://www.youtube.com/watch?v=v8iQV8ZoVBk)
 
-easy to use x-cards in x.com
+轻松的X平台上使用x-cards
+
 
 [![][vercel-shield]][vercel-link]
 
@@ -41,40 +42,40 @@ easy to use x-cards in x.com
 
 ⚡ **X Cards** Share X anywhere ,any format,
 
-## Project Background
+## 项目背景
 
-X is a source of information for many platforms，So this project came into being
+X是许多平台的信息来源，因此产生了这个项目。
 
 ## features
 
-- Easy to access, just a simple click away.
-- Obtain videos, images, text, likes, and browsing history effortlessly.
-- Export in multiple formats, including JSON, Markdown, PNG, JPEG, and SVG.
-- Template feature to save your frequently used card styles.
+* 简单易用，只需点击一下即生成卡片。
+* 轻松获取视频、图片、文字、点赞和浏览历史。
+* 支持多种格式导出，包括JSON、Markdown、PNG、JPEG和SVG。
+* 模板功能，保存您经常使用的卡片样式。
+
 
 <br/>
 
 ## How to Use
 
-1. Download Extension
-
+1. 点击下载插件
 ![Download Extension](./assets/install_guide/1.download.png)
 
-2. url input:chrome://extensions/ in your chrome browser, and open the developer mode
+2. 浏览器输入 chrome://extensions/ 并打开开发者模式
 
-3. unzip and Drag the extension file to the page
-
+3. 解压并，拖动整个文件夹到页面，如图：
 ![Drag the extension file to the page](./assets/install_guide/2.install.png)
 
-4. open x.com and browse the post, you will find your card button in the bottom right corner
+4. 打开x.com并浏览帖子，您将在右下角找到您的卡片按钮，参考上方视频。
 
-## Development Guide
 
-1. The project uses the Plasmo framework for rapid Chrome extension development.
-2. Uses Next.js for frontend development.
-3. Tailwind CSS and Shadcn as CSS frameworks.
-4. Langchain for developing agents.
-5. Deployed on Vercel.
+## 开发指南
+
+本项目使用 Plasmo 框架进行快速 Chrome 扩展开发。
+使用 Next.js 进行前端开发。
+采用 Tailwind CSS 和 Shadcn 作为 CSS 框架。
+使用 Langchain 开发智能代理。
+部署在 Vercel 平台上。
 
 Local development:
 
@@ -86,6 +87,7 @@ npm run dev:next
 # Run plugin
 npm run dev:plasmo
 ```
+
 
 ## Starchart
 

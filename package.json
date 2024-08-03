@@ -1,7 +1,7 @@
 {
   "name": "x-card",
   "displayName": "X Card",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Easy share  X,anywhere,in any format",
   "keywords": [
     "x",
@@ -102,17 +102,15 @@
     "typescript": "5.3.3"
   },
   "manifest": {
-    "key": "$CRX_PUBLIC_KEY",
     "permissions": [
       "scripting",
-      "storage",
-      "https://x-cards.net/*",
-      "http://localhost:1947"
+      "storage"
     ],
     "host_permissions": [
-      "https://x.com",
       "https://x-cards.net/*",
-      "http://localhost:1947"
-    ]
+      "https://x.com/*",
+      "http://localhost:1947/*"
+    ],
+    "key": "$CRX_PUBLIC_KEY"
   }
 }

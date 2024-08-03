@@ -11,15 +11,22 @@ export async function generateStaticParams() {
 const Index = () => {
     useEffect(() => {
         const fn = async (event) => {
-            // 安全性检查：确保消息来自预期的源
+
             // if (event.origin !== 'https://x-cards.net') return;
             const actionName = 'generate-card-local-request'
             if (event.data.action === actionName) {
                 console.log('收到消息来自', event.data, event.origin);
-                // console.log('event.data.messageId', event.data.messageId, lastProcessedMessageId)
-                // lastProcessedMessageId = event.data.messageId;
+
                 const body = event.data.body as XConfig;
                 console.log('body', body);
+
+                let XConfig = {
+                    ...body,
+                }
+                // if has video ,extract video cover 
+                if (body?.video) {
+                    XConfig.images.push(body.video.poster)
+                }
                 useCardStore.getState().setXConfig({
                     ...body,
                 })
