@@ -96,8 +96,8 @@ export const generateImage = async (options: {
 
   const cardEle = document.querySelector('#card') as HTMLElement;
   const { format, width, height, quality = 0.95 } = options;
-  console.log('format', format, width, height, quality);
-  const pixelRatio = 3;
+  // console.log('format', format, width, height, quality);
+  const pixelRatio = 2;
   // 存储原始尺寸
   const originalWidth = cardEle.style.width;
   const originalHeight = cardEle.style.height;
@@ -154,7 +154,7 @@ export const generateImage = async (options: {
 
 export type CopyImage = (tweetInfo: XConfig | XConfig[], cardConfig: any) => Promise<string>;
 export const copyImage: CopyImage = async (tweetInfo, cardConfig = {}) => {
-  console.log('tweetInfo', tweetInfo, cardConfig);
+  // console.log('tweetInfo', tweetInfo, cardConfig);
 
   const format2Array = _.isArray(tweetInfo) ? tweetInfo : [tweetInfo];
 
@@ -212,7 +212,6 @@ export const sendMessageToIframe = async (name: string, data: any, timeout: numb
     throw new Error('Invalid iframe');
   }
   try {
-    console.log('找到iframe', iframe);
     const value = await iframeMessageSystem.publish(iframe, name, data, timeout);
     return value;
   } catch (error) {
@@ -248,12 +247,12 @@ export function extractTweetInfo(postElement) {
   if (!userInfoDiv) return;
 
   const urls = Array.from(userInfoDiv.querySelectorAll('[data-testid="User-Name"] a'))?.map(e => e.href);
-  console.log('urls', urls);
+  // console.log('urls', urls);
   const XPostUrl = urls.find((url) => url.includes('status'));
   tweet.url = XPostUrl;
   tweet.username = userInfoDiv.querySelector('div[dir="ltr"]').textContent;
   let timeStr = userInfoDiv.querySelector('time')?.getAttribute('datetime');
-  console.log('timeStr', timeStr, postElement.querySelector('time'));
+  // console.log('timeStr', timeStr, postElement.querySelector('time'));
   tweet.time = new Date(timeStr).getTime() / 1000;
   if (/\/status\/\d+$/.test(window.location.href)) {
     timeStr = postElement.querySelector('time')?.getAttribute('datetime');
@@ -291,7 +290,7 @@ export function extractTweetInfo(postElement) {
   // https://pbs.twimg.com/media/GUjKHbca8AEeT7e?format=jpg&name=large
   tweet.images = tweet.images.map(img => img.replace(/name=\w+/, 'name=large'));
 
-  console.log('tweet.images', tweet.images);
+  // console.log('tweet.images', tweet.images);
 
   // 提取视频（如果有）
   const video = postElement.querySelector('video');

@@ -14,9 +14,7 @@ interface TwitterCardProps {
 }
 
 export const TwitterCard: React.FC<TwitterCardProps> = ({ xConfig, backgroundStyles, cardStyles, fontStyles }) => {
-    console.log('xConfig', xConfig, backgroundStyles, cardStyles);
-
-
+    // console.log('xConfig', xConfig, backgroundStyles, cardStyles);
 
     const card = useMemo(() => {
         const cardStyle = cardStyles.style;
@@ -246,7 +244,6 @@ const CardBody: React.FC<{
 
 const CardFooter = ({ xConfig }) => {
     const time = _.isArray(xConfig) ? _.last(xConfig).time : xConfig.time;
-    console.log('xConfig', xConfig, formatTimestamp(xConfig.time));
     return (
         <div>
             <div className="text-secondary-foreground flex items-center " style={{ paddingBottom: "0.5em", paddingTop: '0.5rem' }}>

@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/sonner"
-import { Analytics } from "@vercel/analytics/react"
+// import { Analytics } from "@vercel/analytics/react"
 import Logo from '@assets/icon.png'
 import './globals.css'
 
@@ -46,7 +46,7 @@ export default function RootLayout({
           duration={2000}
         />
       </body>
-      <Analytics />
+      {/* <Analytics /> */}
       <script dangerouslySetInnerHTML={getClarityAnalyticsTag()} />
     </html>
   )

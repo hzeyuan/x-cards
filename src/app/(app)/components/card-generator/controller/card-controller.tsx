@@ -40,7 +40,6 @@ export const CardController = () => {
                             max={1080}
                             min={379}
                             onValueChange={(v) => {
-                                console.log('v', v);
                                 updateCardStyles({
                                     width: v[0],
                                 });

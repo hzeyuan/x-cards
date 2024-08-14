@@ -24,12 +24,9 @@ const PlasmoOverlay: React.FC<PlasmoCSUIProps> = ({ anchor }) => {
     const setIsActivated = useTweetsStore((state) => state.setIsActivated);
 
     const websiteURL = "https://x-cards.net/independent";
-    // const websiteURL = "http://127.0.0.1:1947/independent";
-
-    // console.log('websiteURL', websiteURL, process.env);
+    // const websiteURL = "http://127.0.0.1:3000/independent.html";
 
     useEffect(() => {
-        console.log('PlasmoOverlay mounted');
         sendToBackground({
             name: 'code',
             body: {

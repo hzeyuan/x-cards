@@ -70,8 +70,6 @@ export const exportAsMarkdown = (tweetData: XConfig) => {
 
 
 export const exportAsAsset = async (tweetData: XConfig) => {
-    console.log('exportAsAsset');
-    console.log('tweetData', tweetData);
 
     const { username, images, video, text } = tweetData;
 

@@ -43,7 +43,6 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
     const isActivated = useTweetsStore((state) => state.isActivated);
     const [isPreview, showIsPreview] = useState(false);
 
-    console.log('isActivated', isActivated);
 
     const tabs = useMemo(() => {
         return [
@@ -210,7 +209,7 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
     }
 
     const handlePreview = async (tweetInfo: XConfig, tweetInfos: XConfig[] = []) => {
-        console.log('tweetInfo', tweetInfo);
+        // console.log('tweetInfo', tweetInfo);
         let finalTweetInfo = [tweetInfo];
         if (activeTab === 'linear') {
             finalTweetInfo = tweetInfos
@@ -340,7 +339,7 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
 
         </div>
         <div style={styles.label}>Style</div>
-        <div style={styles.gridContainer}>
+        {/* <div style={styles.gridContainer}>
             {cardStyles.map((style) => (
                 <button
                     key={style}
@@ -353,7 +352,7 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
                     <span >{style}</span>
                 </button>
             ))}
-        </div>
+        </div> */}
         <div style={styles.label}>Format</div>
         <div className='grid grid-cols-3 gap-2 w-full'>
             {formats.map((format) => (
@@ -412,7 +411,6 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
 
 
     useEffect(() => {
-        console.log('tweetInfos change', tweets);
         handlePreview(tweetInfo, tweets);
     }, [activeTab, tweets, tweetStyle])
 
@@ -427,8 +425,8 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
                 ...styles.container,
                 width: isPreview ? '256px' : '576px',
             }}
-        // onMouseEnter={() => showIsPreview(false)}
-        // onMouseLeave={() => showIsPreview(true)}
+            onMouseEnter={() => showIsPreview(false)}
+            onMouseLeave={() => showIsPreview(true)}
         >
             <style>{keyframes}</style>
 

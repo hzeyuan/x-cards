@@ -36,11 +36,11 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
         }
     } else if (action === 'check') {
         const { licenseKey } = await Browser.storage.local.get('licenseKey');
-        console.log('licenseKey', licenseKey);
+        // console.log('licenseKey', licenseKey);
         const oldData = await Browser.storage.local.get(key);
-        console.log('oldData', oldData);
+        // console.log('oldData', oldData);
         if (!oldData?.[key] || !licenseKey) return res.send(null);
-        console.log('check isActivated', oldData);
+        // console.log('check isActivated', oldData);
         const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
             method: 'POST',
             headers: {

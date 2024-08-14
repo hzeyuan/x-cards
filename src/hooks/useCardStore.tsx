@@ -186,13 +186,12 @@ export const useCardStore = create<CardStore>(
         },
         xConfig: [{
             username: '@FeigelC35583',
-            // images: [],
-            images: ['https://pbs.twimg.com/media/GTzQPUhbQAA0mwk?format=jpg&name=large', 'https://pbs.twimg.com/media/GUa0UwYaoAAYPCY?format=jpg'],
+            images: [],
+            // images: ['https://pbs.twimg.com/media/GTzQPUhbQAA0mwk?format=jpg&name=large', 'https://pbs.twimg.com/media/GUa0UwYaoAAYPCY?format=jpg'],
             // images: ['https://pbs.twimg.com/media/GUa0UwYaoAAYPCY?format=jpg'],
             url: '',
             avatar: 'https://pbs.twimg.com/media/GUa0UwYaoAAYPCY?format=jpg',
-            text: `隐私协议生成器，准备上架的时候非常有用，直接一个url贴到app Store。
-https://app.privacypolicies.com/wizard/privacy-policy…`,
+            text: `hello`,
             replies: 6,
             likes: 6,
             shares: 6,

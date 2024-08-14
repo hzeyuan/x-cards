@@ -82,7 +82,6 @@ export const ApiKeyPanel = () => {
                                 type="password"
                                 placeholder="sk-your api key"
                                 onChange={(e) => {
-                                    console.log('e.target.value', e.target.value);
                                     localStorage.setItem('apikey', e.target.value);
                                     setApiKey(e.target.value)
                                 }}

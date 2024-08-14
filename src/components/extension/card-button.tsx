@@ -37,7 +37,7 @@ export const CardButton: React.FC<{
             const postElement = anchor.element.closest('article[data-testid="tweet"]');
             const tweetInfo = extractTweetInfo(postElement)
             const imageSrc = await pRetry(async () => {
-                console.log('cardConfig.current', cardConfig.current);
+                // console.log('cardConfig.current', cardConfig.current);
                 return copyImage(tweetInfo, cardConfig.current);
             }, {
                 retries: 3,

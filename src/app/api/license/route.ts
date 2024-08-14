@@ -41,7 +41,6 @@ export const POST = async (req: NextRequest) => {
         //     return NextResponse.json({ message: 'Purchase code has already been used' }, { status: 400 });
         // }
 
-        console.log('data', data);
         // 标记为已使用
         const { error: updateError } = await supabase
             .from('licenses')
