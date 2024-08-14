@@ -46,6 +46,32 @@
 
 X是许多平台的信息来源，因此产生了这个项目。
 
+
+## Changelog
+
+<details>
+<summary><strong>v0.0.2</strong></summary>
+
+* 新增实时预览功能，现在右上角有个toast可以观察到生成的卡片。
+* 引入了自定义卡片背景颜色。
+* 可自定义卡片宽度。
+* 改进：现在点击默认复制图片，而不是下载图片。
+* 修复了视频获取封面图的问题。
+* 增加了连续帖子获取的支持。
+* 实现了帖子的动态添加、删除、拖拽和管理。
+
+</details>
+
+<details>
+<summary><strong>v0.0.1</strong></summary>
+
+* 点击即可轻松访问。
+* 获取视频、图片、文本、点赞等。
+* 导出多种格式，包括JSON、Markdown、PNG、JPEG和SVG。
+
+</details>
+
+
 ## features
 
 * 简单易用，只需点击一下即生成卡片。

@@ -45,6 +45,42 @@ easy to use x-cards in x.com
 
 X is a source of information for many platforms，So this project came into being
 
+
+
+
+## Changelog
+
+<details>
+<summary><strong>v0.0.2</strong></summary>
+
+
+* Added real-time preview feature, now a toast in the upper right corner allows you to observe the generated card.
+
+* Introduced customization for card background color.
+
+* Customizable card width.
+
+* Improved: Now clicking defaults to copying the image, rather than downloading the image.
+
+* Fixed the issue of unable to fetch cover image for videos.
+
+* Added support for fetching continuous posts.
+
+* Enabled dynamic addition, deletion, dragging, and management of posts.
+
+![Download Extension](./assets/v0.02-demo.jpg)
+
+</details>
+
+<details>
+<summary><strong>v0.0.1</strong></summary>
+
+* Easy to access, just a simple click away.
+* Obtain videos, images, text, likes。
+* Export in multiple formats, including JSON, Markdown, PNG, JPEG, and SVG.
+
+</details>
+
 ## features
 
 - Easy to access, just a simple click away.

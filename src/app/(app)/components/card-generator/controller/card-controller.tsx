@@ -1,11 +1,10 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion";
+import { AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion";
 import { ColorPicker } from "@components/ui/color-picker";
-import { Input } from "@components/ui/input";
 import { Slider } from "@components/ui/slider";
 import { useCardStore } from "@src/hooks/useCardStore";
-import { Select } from "@components/ui/select";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@components/ui/radio-group";
+import LayoutOptions from "@src/components/extension/layout-options";
 export const CardController = () => {
     const cardStyles = useCardStore((state) => state.cardStyles);
     const updateCardStyles = useCardStore((state) => state.updateCardStyles);
@@ -38,7 +37,7 @@ export const CardController = () => {
                     <div className=" w-full">
                         <Slider step={1}
                             value={[cardStyles.width]}
-                            max={1048}
+                            max={1080}
                             min={379}
                             onValueChange={(v) => {
                                 console.log('v', v);
@@ -96,6 +95,25 @@ export const CardController = () => {
                         }}
                     ></ColorPicker>
                 </label>
+
+                <label className="flex min-h-[40px] flex-row items-center justify-start transition-opacity duration-[0.15s] ease-[ease-in-out]  py-1">
+                    <span className="grow-[2] text-[13px]">Style</span>
+                    <RadioGroup value={cardStyles.style} onValueChange={(v) => {
+                        updateCardStyles({
+                            style: v,
+                        });
+                    }}>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="article" id="article" />
+                            <span>article</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="posts" id="posts" />
+                            <span>posts</span>
+                        </div>
+                    </RadioGroup>
+                </label>
+
                 <label className="flex min-h-[40px] flex-row items-center justify-start transition-opacity duration-[0.15s] ease-[ease-in-out]  py-1">
                     <span className="grow-[2] text-[13px]">Border Radius</span>
                     <Slider step={1}
@@ -109,6 +127,17 @@ export const CardController = () => {
 
                     ></Slider>
                 </label>
+
+                {/* <label className="flex flex-col min-h-[40px] justify-start transition-opacity duration-[0.15s] ease-[ease-in-out]  py-1">
+                    <span className="grow-[2] text-[13px]">Resize</span>
+                    <LayoutOptions onSelect={(option) => {
+                        updateCardStyles({
+                            width: option.dimensions.width,
+                            height: option.dimensions.height,
+                        })
+                    }}></LayoutOptions>
+                </label> */}
+
 
 
                 {selectedFiles.length > 0 && (

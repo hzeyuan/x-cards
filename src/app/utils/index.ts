@@ -2,107 +2,229 @@ import * as _ from 'lodash-es';
 
 import { toPng, toJpeg, toSvg } from 'html-to-image';
 import type { XConfig } from '@src/hooks/useCardStore';
-import { sendToBackground } from '@plasmohq/messaging';
+import { iframeMessageSystem } from './IFrameMessageSystem';
+import { checkAppliedStyle, getAdjacentCellDiv, traverseAndCheck } from './element';
 
 
-
-
-export function formatTimestamp(timestamp: number): string {
-  const date = new Date(timestamp * 1000); // 将秒转换为毫秒
-
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-
-  // 转换为12小时制
-  const formattedHours = hours % 12 || 12;
-
-  // 确保分钟是两位数
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-
-  const day = date.getDate();
-  const month = date.toLocaleString('default', { month: 'short' });
-  const year = date.getFullYear();
-
-  return `${formattedHours}:${formattedMinutes} ${ampm} · ${day} ${month}, ${year}`;
+export function checkTheVerticalLine(element) {
+  if (!element) return false;
+  const styleProperties = [['width', '2px'], ['flex-grow', '1']];
+  if (checkAppliedStyle(element, styleProperties)) return true;
+  return false;
 }
 
-export const generateImage = async (options: {
-  data?: XConfig,
-  format: string
-}) => {
 
-  const { format, data } = options;
-  
-  //await all images to load
-  if (data?.images.length > 0) {
-    await Promise.all(data.images.map(src => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = resolve;
-        img.onerror = reject;
-      });
-    })
-    );
+export const checkPostIsThread = (postElement) => {
+
+  function isElementVisible(element) {
+    const style = window.getComputedStyle(element);
+    return style.height !== '0px';
   }
 
+  const isThread = traverseAndCheck(postElement, (element) => { return checkTheVerticalLine(element) });
+  let prePostIsThread = false;
+  let prePost = getAdjacentCellDiv(postElement, 'previous');
+  while (true) {
+    if (!prePost) break;
+    if (isElementVisible(prePost)) {
+      // console.log('prePost', prePost);
+      prePostIsThread = traverseAndCheck(prePost, (element) => { return checkTheVerticalLine(element) });
+      break;
+    }
+    prePost = getAdjacentCellDiv(prePost, 'previous');
+  }
+  return isThread || prePostIsThread;
+}
+
+export const getPostThread = (postElement) => {
+  // function isElementVisible(element) {
+  //   const style = window.getComputedStyle(element);
+  //   return style.height !== '0px';
+  // }
+  const isElementVisible = element => element.offsetHeight !== 0;
+
+
+  // if (!isThread) return [postElement];
+
+  const postThread = [postElement];
+  let prePost = getAdjacentCellDiv(postElement, 'previous');
+
+  while (true) {
+    if (!prePost) break;
+    if (isElementVisible(prePost)) {
+      const prePostIsThread = traverseAndCheck(prePost, (element) => { return checkTheVerticalLine(element) });
+      if (prePostIsThread) {
+        postThread.unshift(prePost);
+      } else {
+        break
+      }
+    }
+    prePost = getAdjacentCellDiv(prePost, 'previous');
+  }
+
+  // let nextPost = getAdjacentCellDiv(postElement, 'next');
+  let nextPost = getAdjacentCellDiv(postElement, 'next');
+  const isEndThread = !traverseAndCheck(postElement, (element) => { return checkTheVerticalLine(element) });
+  console.log('isEndThread', isEndThread, postElement);
+  if (isEndThread) {
+    return postThread;
+  }
+  while (true) {
+    if (!nextPost) break;
+    if (isElementVisible(nextPost)) {
+      const nextPostIsThread = traverseAndCheck(nextPost, (element) => { return checkTheVerticalLine(element) });
+      console.log('nextPostIsThread', nextPostIsThread, nextPost);
+      postThread.push(nextPost);
+      if (!nextPostIsThread) {
+        break;
+      }
+    }
+    nextPost = getAdjacentCellDiv(nextPost, 'next');
+  }
+
+  return postThread;
+}
+
+
+export const generateImage = async (options: {
+  // data?: XConfig[],
+  format: string
+  width?: number,
+  height?: number,
+  quality?: number
+}) => {
+
   const cardEle = document.querySelector('#card') as HTMLElement;
-  console.log('cardEle', cardEle, format);
+  const { format, width, height, quality = 0.95 } = options;
+  console.log('format', format, width, height, quality);
+  const pixelRatio = 3;
+  // 存储原始尺寸
+  const originalWidth = cardEle.style.width;
+  const originalHeight = cardEle.style.height;
+
+  const waitForImages = () => {
+    const images = cardEle.querySelectorAll('img');
+    const imagePromises = Array.from(images).map(img => {
+      if (img.complete) {
+        return Promise.resolve();
+      } else {
+        return new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      }
+    });
+    return Promise.all(imagePromises);
+  };
+
   try {
-    let dataUrl;
+
+    await waitForImages();
+
+    // 如果提供了新的尺寸，则应用它们
+    let dataUrl: string;
+    const exportOptions = {
+      quality,
+      pixelRatio,
+    };
+
     switch (format) {
       case 'png':
-        dataUrl = await toPng(cardEle, { quality: 0.95, pixelRatio: 2, width: cardEle.offsetWidth, height: cardEle.offsetHeight });
+        dataUrl = await toPng(cardEle, {
+          ...exportOptions,
+        });
         break;
       case 'jpeg':
-        dataUrl = await toJpeg(cardEle, { quality: 0.95, width: cardEle.offsetWidth, height: cardEle.offsetHeight });
+        dataUrl = await toJpeg(cardEle, exportOptions);
         break;
       case 'svg':
-        dataUrl = await toSvg(cardEle, { quality: 0.95, width: cardEle.offsetWidth, height: cardEle.offsetHeight });
+        dataUrl = await toSvg(cardEle, exportOptions);
         break;
       default:
         throw new Error('Unsupported format');
     }
+
     return dataUrl;
   } catch (err) {
     console.error('Error exporting image:', err);
-    return 'error' + err.message
+    return 'error: ' + (err as Error).message;
+  } finally {
   }
 }
 
-export const copyImage = async (format: string) => {
-  try {
-    const dataUrl = await generateImage({
-      format: format,
-    });
-    const img = new Image();
-    img.src = dataUrl;
-    document.body.appendChild(img);
-    document.execCommand('copy');
-    document.body.removeChild(img);
-  } catch (err) {
+export type CopyImage = (tweetInfo: XConfig | XConfig[], cardConfig: any) => Promise<string>;
+export const copyImage: CopyImage = async (tweetInfo, cardConfig = {}) => {
+  console.log('tweetInfo', tweetInfo, cardConfig);
 
-    console.error('Error copying image:', err
-    );
+  const format2Array = _.isArray(tweetInfo) ? tweetInfo : [tweetInfo];
+
+  const value = await sendMessageToIframe('generate-card-local', {
+    tweetInfo: format2Array,
+    cardConfig
+  });
+
+  const imageDataUrl = value.dataUrl;
+
+  try {
+    // Extract MIME type and base64 data from the data URL
+    const [, mimeType, base64Data] = imageDataUrl.match(/^data:(.+);base64,(.+)$/);
+
+    // Convert base64 to Blob more efficiently
+    const blob = await fetch(imageDataUrl).then(res => res.blob());
+
+    // Copy to clipboard
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [mimeType]: blob
+      })
+    ]);
+
+    console.log('Image copied to clipboard successfully');
+    return imageDataUrl;
+  } catch (err) {
+    console.error('Failed to copy image:', err);
   }
 }
 
-export const exportImage = async (format: string) => {
+
+export const downloadImage = async (tweetInfo: XConfig | XConfig[], cardConfig = {}) => {
+
+  const format2Array = _.isArray(tweetInfo) ? tweetInfo : [tweetInfo];
+
+  const value = await sendMessageToIframe('generate-card-local', {
+    tweetInfo: format2Array,
+    cardConfig
+  });
+  const { url, dataUrl } = value;
+  const xName = 'x-card'
+  //  tweetInfo.username || 'x-card';
+  const link = document.createElement('a');
+  link.download = `${xName}.${cardConfig?.format || 'png'}`
+  link.href = dataUrl;
+  link.click();
+}
+
+
+
+export const sendMessageToIframe = async (name: string, data: any, timeout: number = 10000): Promise<any> => {
+  const iframe = findXCardsIframe();
+  if (!iframe || !iframe.contentWindow) {
+    throw new Error('Invalid iframe');
+  }
   try {
-    const dataUrl = await generateImage({
-      format: format,
-    });
-    const link = document.createElement('a');
-    link.download = `export.${format}`;
-    link.href = dataUrl;
-    link.click();
-  } catch (err) {
-    console.error('Error exporting image:', err);
+    console.log('找到iframe', iframe);
+    const value = await iframeMessageSystem.publish(iframe, name, data, timeout);
+    return value;
+  } catch (error) {
+    console.error('Error sending message to iframe:', error);
+    throw error;
   }
 };
 
-export function extractTweetInfo(articleElement) {
+
+
+
+export function extractTweetInfo(postElement) {
   const tweet: XConfig = {
     url: '',
     avatar: "",
@@ -119,26 +241,23 @@ export function extractTweetInfo(articleElement) {
 
 
   // 提取头像
-  tweet.avatar = articleElement.querySelector('img[draggable="true"]').src;
+  tweet.avatar = postElement.querySelector('img[draggable="true"]')?.src;
 
   // 提取用户信息和时间
-  const userInfoDiv = articleElement.querySelector('[data-testid="User-Name"]');
-
+  const userInfoDiv = postElement.querySelector('[data-testid="User-Name"]');
+  if (!userInfoDiv) return;
 
   const urls = Array.from(userInfoDiv.querySelectorAll('[data-testid="User-Name"] a'))?.map(e => e.href);
+  console.log('urls', urls);
   const XPostUrl = urls.find((url) => url.includes('status'));
   tweet.url = XPostUrl;
   tweet.username = userInfoDiv.querySelector('div[dir="ltr"]').textContent;
-  // tweet.handle = userInfoDiv.querySelector('div[dir="ltr"] + div[dir="ltr"]').textContent;
-
-  if (window.location.href.includes('/home')) {
-    const timeStr = userInfoDiv.querySelector('time').getAttribute('datetime');
-    if (timeStr) {
-      tweet.time = new Date(timeStr).getTime() / 1000;
-    }
-  } else if (/\/status\/\d+$/.test(window.location.href)) {
-    console.log('tweet info');
-    const timeStr = articleElement.querySelector('time').getAttribute('datetime');
+  let timeStr = userInfoDiv.querySelector('time')?.getAttribute('datetime');
+  console.log('timeStr', timeStr, postElement.querySelector('time'));
+  tweet.time = new Date(timeStr).getTime() / 1000;
+  if (/\/status\/\d+$/.test(window.location.href)) {
+    timeStr = postElement.querySelector('time')?.getAttribute('datetime');
+    console.log('timeStr', timeStr);
     if (timeStr) {
       tweet.time = new Date(timeStr).getTime() / 1000;
     }
@@ -146,11 +265,11 @@ export function extractTweetInfo(articleElement) {
 
 
   // 提取文本内容
-  // tweet.text = articleElement.querySelector('[data-testid="tweetText"]').textContent;
-  const tweetTextElement = articleElement.querySelector('[data-testid="tweetText"]');
+  // tweet.text = postElement.querySelector('[data-testid="tweetText"]').textContent;
+  const tweetTextElement = postElement.querySelector('[data-testid="tweetText"]');
   tweet.text = tweetTextElement?.textContent || '';
   tweet.tags = [];
-  tweetTextElement.querySelectorAll('a[href^="/hashtag/"]').forEach(tag => {
+  tweetTextElement?.querySelectorAll('a[href^="/hashtag/"]').forEach(tag => {
     const tagText = tag.textContent;
     tweet.tags.push(tagText);
     tweet.text = tweet.text.replace(tagText, ''); // 从文本中移除标签
@@ -159,11 +278,23 @@ export function extractTweetInfo(articleElement) {
 
 
   // 提取图片（如果有）
-  const images = articleElement.querySelectorAll('[data-testid="tweetPhoto"] img');
+  const images = _.compact([
+    ...postElement.querySelectorAll('[data-testid="tweetPhoto"] img'),
+    // ...postElement.querySelectorAll('[data-testid="tweetPhoto"] video')
+  ]);
   tweet.images = Array.from(images).map(img => img.src);
 
+
+
+  // 图片换成高清图，
+  // https://pbs.twimg.com/media/GUjKHbca8AEeT7e?format=jpg&name=small
+  // https://pbs.twimg.com/media/GUjKHbca8AEeT7e?format=jpg&name=large
+  tweet.images = tweet.images.map(img => img.replace(/name=\w+/, 'name=large'));
+
+  console.log('tweet.images', tweet.images);
+
   // 提取视频（如果有）
-  const video = articleElement.querySelector('video');
+  const video = postElement.querySelector('video');
   if (video) {
     tweet.video = {
       poster: video.poster,
@@ -172,14 +303,15 @@ export function extractTweetInfo(articleElement) {
   }
 
   // 提取链接（如果有）
-  const links = articleElement.querySelectorAll('a[href^="https://"]');
+  const links = postElement.querySelectorAll('a[href^="https://"]') as NodeListOf<HTMLAnchorElement>;
   tweet.links = Array.from(links).map(link => ({
     href: link.href,
-    text: link.textContent
+    text: link.textContent,
+    src: link?.querySelector('img')?.src
   }));
 
   // 提取统计信息
-  const stats = articleElement.querySelector('[role="group"]');
+  const stats = postElement.querySelector('[role="group"]');
   tweet.replies = stats.querySelector('[data-testid="reply"]').textContent || 0;
   tweet.shares = stats.querySelector('[data-testid="retweet"]').textContent || 0;
   tweet.likes = stats.querySelector('[data-testid="like"]').textContent || 0;
@@ -188,85 +320,15 @@ export function extractTweetInfo(articleElement) {
   return tweet;
 }
 
-export const exportAsMarkdown = (tweetData) => {
-  const {
-    username,
-    time,
-    text,
-    likes,
-    shares,
-    replies,
-    video,
-    images
-  } = tweetData;
+export const findXCardsIframe = () => {
+  const shadowRoot = document.querySelector("plasmo-csui#x-cards-overlay")?.shadowRoot;
+  if (!shadowRoot) throw new Error('Shadow root not found');
 
-  const formattedDate = new Date(time * 1000).toLocaleString();
+  const iframe = shadowRoot.getElementById('x-card-ai') as HTMLIFrameElement;
+  if (!iframe) throw new Error('Iframe not found');
+  return iframe;
 
-  let markdownContent = `# Tweet by ${username}\n\n`;
-  markdownContent += `*Posted on ${formattedDate}*\n\n`;
-  markdownContent += `${text}\n\n`;
-
-  if (video && video.poster) {
-    markdownContent += `![Video Thumbnail](${video.poster})\n\n`;
-    markdownContent += `*This tweet contains a video*\n\n`;
-  }
-
-  if (images && images.length > 0) {
-    images.forEach((img, index) => {
-      markdownContent += `![Image ${index + 1}](${img})\n\n`;
-    });
-  }
-
-  markdownContent += `--- \n\n`;
-  markdownContent += `**Stats**\n\n`;
-  markdownContent += `Likes: ${likes}\n`;
-  markdownContent += `Shares: ${shares}\n`;
-  markdownContent += `Replies: ${replies}\n\n`;
-
-  // 创建并下载 Markdown 文件
-  const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `tweet_${username}_${time}.md`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  return markdownContent; // 返回生成的Markdown内容，以便在需要时使用
-};
-
-export const exportAsAsset = () => {
-  console.log('exportAsAsset');
 }
 
 
-// const getTweetUrl = async (cardHeaderPanelNode) => {
-//   const tweetUrlsEle = cardHeaderPanelNode.querySelectorAll('a');
-//   const urls = Array.from(tweetUrlsEle).map((ele) => ele.href);
-//   console.log('tweetUrls', urls);
-//   return urls.find((url) => url.includes('status'));
-// };
 
-// export async function requestTweetForServer(root: HTMLElement) {
-//   const cardFooterPanelNode = anchor.element.parentNode.parentNode.parentNode;
-//   const cardInfoPanelNodeList = cardFooterPanelNode.parentNode.childNodes;
-//   const cardHeaderPanelNode = cardInfoPanelNodeList[0];
-
-//   const tweetUrl = getTweetUrl(cardHeaderPanelNode);
-//   if (!tweetUrl) throw new Error('Tweet URL not found');
-//   console.log('tweetUrl', tweetUrl);
-//   const res = await sendToBackground({
-//     name: 'tweet',
-//     body: {
-//       action: 'get-tweet',
-//       url: tweetUrl
-//     }
-//   });
-
-//   if (res.error) throw new Error(res.error);
-//   // tweetUrlRef.current = tweetUrl;
-//   // tweetInfoRef.current = res;
-//   console.log('Background response:', res);
-// }

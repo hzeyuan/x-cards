@@ -2,22 +2,22 @@ import Tippy from "@tippyjs/react";
 import { useEffect, useRef } from "react";
 
 export const DynamicStyleTippyComponent = ({ children, content, tippyOptions = {} }) => {
-    const styleId = 'dynamic-tippy-styles';
-    const tippyRef = useRef(null);
+  const styleId = 'x-cards-dropdown-styles';
+  const tippyRef = useRef(null);
 
-    useEffect(() => {
-        // Check if the style element already exists
-        let styleElement = document.getElementById(styleId);
+  useEffect(() => {
+    // Check if the style element already exists
+    let styleElement = document.getElementById(styleId);
 
-        if (!styleElement) {
-            // If it doesn't exist, create it
-            styleElement = document.createElement('style');
-            styleElement.id = styleId;
-            document.head.appendChild(styleElement);
-        }
+    if (!styleElement) {
+      // If it doesn't exist, create it
+      styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      document.head.appendChild(styleElement);
+    }
 
-        // Define your styles
-        const styles = `
+    // Define your styles
+    const styles = `
      .tippy-box[data-theme~='custom'] {
  --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -77,11 +77,16 @@ export const DynamicStyleTippyComponent = ({ children, content, tippyOptions = {
   color: hsl(var(--accent-foreground));
 }
 
+.tippy-box[data-theme~='custom'] .dropdown-menu-item.no-hover:hover {
+  background-color: transparent;
+  color: hsl(var(--foreground));
+}
+
 .tippy-box[data-theme~='custom'] .dropdown-menu-item:active {
   background-color: hsl(var(--muted));
 }
 
-.tippy-box[data-theme~='custom'] .dropdown-menu-item svg {
+.tippy-box[data-theme~='custom'] .dropdown-menu-icon  {
   width: 16px;
   height: 16px;
   margin-right: 8px;
@@ -89,14 +94,38 @@ export const DynamicStyleTippyComponent = ({ children, content, tippyOptions = {
   transition: color 0.2s;
 }
 
-.tippy-box[data-theme~='custom'] .dropdown-menu-item:hover svg {
+.tippy-box[data-theme~='custom'] .dropdown-menu-icon:hover  {
   color: hsl(var(--accent-foreground));
 }
 
 .tippy-box[data-theme~='custom'] .dropdown-menu-separator {
-  height: 1px;
-  background-color: hsl(var(--border));
-  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  // margin: 10px 0;
+}
+
+
+.tippy-box[data-theme~='custom'] .dropdown-menu-separator::before,
+.tippy-box[data-theme~='custom'] .dropdown-menu-separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.tippy-box[data-theme~='custom'] .dropdown-menu-separator::before {
+  margin-right: 0.5em;
+}
+
+.tippy-box[data-theme~='custom'] .dropdown-menu-separator::after {
+  margin-left: 0.5em;
+}
+
+.tippy-box[data-theme~='custom'] .dropdown-menu-separator-text {
+  padding: 0 10px;
+  font-size: 0.85em;
+  color: hsl(var(--muted-foreground));
+  white-space: nowrap;
 }
 
 .tippy-box[data-theme~='custom'] .dropdown-menu-item.danger {
@@ -117,30 +146,28 @@ export const DynamicStyleTippyComponent = ({ children, content, tippyOptions = {
 }
         `;
 
-        // Set the styles
-        styleElement.textContent = styles;
+    // Set the styles
+    styleElement.textContent = styles;
 
-        // Cleanup function
-        return () => {
-            // Optionally remove the style element when the component unmounts
-            // document.head.removeChild(styleElement);
-        };
-    }, []); // Empty dependency array means this effect runs once on mount
+    // Cleanup function
+    return () => {
+    };
+  }, []);
 
 
 
 
-    return (
-        <Tippy
-            ref={tippyRef}
-            content={content}
-            interactive={true}
-            appendTo={document.body}
-            placement="top-start"
-            theme="custom" // Use our custom theme
-            {...tippyOptions}
-        >
-            {children}
-        </Tippy>
-    );
+  return (
+    <Tippy
+      ref={tippyRef}
+      content={content}
+      interactive={true}
+      appendTo={document.body}
+      placement="top-start"
+      theme="custom" // Use our custom theme
+      {...tippyOptions}
+    >
+      {children}
+    </Tippy>
+  );
 };

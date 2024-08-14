@@ -2,14 +2,14 @@
 import React, { useEffect } from "react"
 import * as _ from 'lodash-es';
 import Hero from "./components/hero";
-import { CardGenerator } from "./components/card-generator";
+// import { CardGenerator } from "./components/card-generator";
 import { cn } from "@lib/utils";
 import gradientBottomSvg from '@assets/gradient-bottom.svg';
 
 const HomePage = () => {
 
     return (
-        <div className=" pb-14  w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
+        <div className=" pb-14 min-h-[100vh]   w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
 
             <div className="z-0 absolute w-80 h-60 bg-blue-400 blur-[80px] opacity-30 top-40 left-40"></div>
             <div className="z-0 absolute w-80 h-60 bg-purple-400 blur-[80px] opacity-30 top-40 right-40"></div>
@@ -40,10 +40,9 @@ const HomePage = () => {
                 <div className="pt-8">
                     <Hero />
                 </div>
-                {/* <XForm></XForm> */}
-                <div className="pt-12 ">
+                {/* <div className="pt-12 ">
                     <CardGenerator></CardGenerator>
-                </div>
+                </div> */}
             </div>
         </div>
     );

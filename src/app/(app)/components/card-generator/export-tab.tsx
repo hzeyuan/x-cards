@@ -1,7 +1,8 @@
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion";
 
 import { Button } from "@components/ui/button";
-import { exportImage } from "@src/app/utils";
+import { copyImage, generateImage } from "@src/app/utils";
+import { exportImage } from "@src/app/utils/export";
 export const ExportTab = () => {
 
 
@@ -16,6 +17,30 @@ export const ExportTab = () => {
                         <Button size="sm" onClick={() => exportImage('jpeg')}>As JPEG</Button>
                         <Button size="sm" onClick={() => exportImage('svg')}>As SVG</Button>
                     </div>
+                    {/* <Button size="sm" onClick={async () => {
+                            try {
+                                const imageDataUrl = await generateImage({
+                                    format: 'png',
+                                });
+                                // Extract MIME type and base64 data from the data URL
+                                const [, mimeType, base64Data] = imageDataUrl.match(/^data:(.+);base64,(.+)$/);
+
+                                // Convert base64 to Blob more efficiently
+                                const blob = await fetch(imageDataUrl).then(res => res.blob());
+
+                                // Copy to clipboard
+                                await navigator.clipboard.write([
+                                    new ClipboardItem({
+                                        [mimeType]: blob
+                                    })
+                                ]);
+
+                                console.log('Image copied to clipboard successfully');
+                                return imageDataUrl;
+                            } catch (err) {
+                                console.error('Failed to copy image:', err);
+                            }
+                        }}>Copy Png</Button> */}
                 </label>
 
             </AccordionContent>

@@ -146,7 +146,7 @@ export const BackgroundController = (props) => {
                         )}
                     </AnimatePresence>
                 </div>
-
+                {/* preset  Image */}
                 <label className="flex min-h-[40px] flex-col gap-y-2 justify-start transition-opacity duration-[0.15s] ease-[ease-in-out] py-1">
                     <span className="text-[13px]">Image</span>
                     <div className="w-full">
@@ -200,6 +200,23 @@ export const BackgroundController = (props) => {
                             onValueChange={(v) => {
                                 updateBackgroundStyles({
                                     backgroundWidth: v[0],
+                                });
+                            }}
+
+                        ></Slider>
+                    </div>
+                </label>
+                {/* background padding */}
+                <label className="flex min-h-[40px] flex-col gap-y-2  justify-start transition-opacity duration-[0.15s] ease-[ease-in-out]  py-1">
+                    <span className=" text-[13px]">Padding</span>
+                    <div className=" w-full">
+                        <Slider step={1}
+                            value={[backgroundStyles.padding]}
+                            max={100}
+                            min={0}
+                            onValueChange={(v) => {
+                                updateBackgroundStyles({
+                                    padding: v[0],
                                 });
                             }}
 

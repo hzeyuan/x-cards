@@ -1,0 +1,35 @@
+@tailwind base;
+/* @tailwind components; */
+@tailwind utilities;
+
+
+:root {
+    --primary: #007bff; /* bg-primary color value */
+    --primary-foreground: #ffffff; /* text-primary-foreground color value */
+    --ring: rgba(0, 0, 0, 0.2); /* focus-visible:ring color value */
+    --ring-offset: #ffffff; /* focus-visible:ring-offset color value */
+    --primary-hover: #0056b3; /* hover:bg-primary/90 color value */
+  }
+  
+
+.custom-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    border-radius: 0.375rem; /* rounded-md */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    background-color: var(--primary); /* bg-primary */
+    color: var(--primary-foreground); /* text-primary-foreground */
+    height: 2.5rem; /* h-10 */
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    transition: background-color 0.2s; /* transition-colors */
+  
+    /* Focus visible state */
+    outline: none; /* focus-visible:outline-none */
+    box-shadow:
+      0 0 0 2px var(--ring),
+      0 0 0 4px var(--ring-offset); /* focus-visible:ring-2 & focus-visible:ring-offset-2 */
+  }
+  
