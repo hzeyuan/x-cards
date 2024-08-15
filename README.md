@@ -92,6 +92,14 @@ X is a source of information for many platforms，So this project came into bein
 
 ## How to Use
 
+
+
+### [chrome web Store](https://chromewebstore.google.com/detail/x-card/mbinooofmcjhjklihfejnkkebffceeop)
+
+
+
+##  or
+
 1. Download Extension
 
 ![Download Extension](./assets/install_guide/1.download.png)

@@ -1,5 +1,3 @@
-"use client"
-import React, { useEffect } from "react"
 import * as _ from 'lodash-es';
 import Hero from "./components/hero";
 // import { CardGenerator } from "./components/card-generator";
@@ -40,9 +38,6 @@ const HomePage = () => {
                 <div className="pt-8">
                     <Hero />
                 </div>
-                {/* <div className="pt-12 ">
-                    <CardGenerator></CardGenerator>
-                </div> */}
             </div>
         </div>
     );

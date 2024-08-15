@@ -17,7 +17,7 @@ const AppLayout = ({ children }) => {
                         X cards also support the chrome extension version.{" "}
                         <a
                             className="underline flex items-center"
-                            href="https://static.usesless.com/x-cards/chrome-mv3-prod.zip"
+                            href="https://chromewebstore.google.com/detail/x-card/mbinooofmcjhjklihfejnkkebffceeop"
                             target="_blank"
                         >
                             <span className="ml-2 text-xs">Get Chrome Extension →</span>

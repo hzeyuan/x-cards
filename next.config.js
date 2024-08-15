@@ -3,14 +3,13 @@ const isProd = false;
 const bundleAnalyzer = require('@next/bundle-analyzer')
 const withBundleAnalyzer = bundleAnalyzer({
     enabled: false,
-    openAnalyzer: false,
+    openAnalyzer: true,
 })
 
 
 module.exports = withBundleAnalyzer({
     swcMinify: true,
     crossOrigin: 'anonymous',
-    // output: "standalone",
     reactStrictMode: false,
     env: {
         STATIC_URL: isProd ? STATIC_URL : "http://localhost:3000",
@@ -52,7 +51,6 @@ module.exports = withBundleAnalyzer({
             config.externals = config.externals || [];
             config.externals.push((context, request, callback) => {
                 if (request.startsWith('pages/api/') || request.startsWith('app/api/')) {
-                    // 将 API 路由标记为外部依赖，这样 webpack 就不会尝试打包它们
                     return callback(null, `commonjs ${request}`);
                 }
                 callback();

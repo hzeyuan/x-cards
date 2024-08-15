@@ -2,13 +2,25 @@ import { Toaster } from "@/components/ui/sonner"
 // import { Analytics } from "@vercel/analytics/react"
 import Logo from '@assets/icon.png'
 import './globals.css'
+import { siteConfig } from "@src/config/site";
+
+// export const metadata = {
+//   title: 'x cards',
+//   description: 'X Cards: Power Up Your Tweet Marketing on X.com',
+// }
 
 export const metadata = {
-  title: 'x cards',
-  description: 'Rebuild your bookmarks with AI',
-}
-
-
+  title: siteConfig.name,
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: siteConfig.authors,
+  creator: siteConfig.creator,
+  themeColor: siteConfig.themeColor,
+  icons: siteConfig.icons,
+  // metadataBase: siteConfig.metadataBase,
+  openGraph: siteConfig.openGraph,
+  twitter: siteConfig.twitter,
+};
 
 
 export default function RootLayout({
