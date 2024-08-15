@@ -171,7 +171,7 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
     }
 `
     const canPass = () => {
-        if (!isActivated && tweetModeRef.current === 'linear') {
+        if (!isActivated && activeTab === 'linear') {
             setShowCodeDialog(true);
             return false;
         }

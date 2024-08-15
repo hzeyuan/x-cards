@@ -18,7 +18,7 @@ const Hero = () => {
                     {' '}
                 </p>
                 <div className="mt-10 flex gap-4">
-                    <a href="https://static.usesless.com/x-cards/chrome-mv3-prod.zip"
+                    <a href="https://chromewebstore.google.com/detail/x-card/mbinooofmcjhjklihfejnkkebffceeop"
                         className="p-[3px] relative group">
                         <div className="absolute inset-0 bg-gradient-to-r from-[#8F01FF] to-[#FDB83B] rounded-lg" />
                         <div className="px-8 py-2  group-hover:scale-105  flex  gap-x-3   rounded-[6px]  relative group transition duration-200 text-white ">
