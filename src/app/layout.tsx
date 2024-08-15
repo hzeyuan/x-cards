@@ -4,11 +4,6 @@ import Logo from '@assets/icon.png'
 import './globals.css'
 import { siteConfig } from "@src/config/site";
 
-// export const metadata = {
-//   title: 'x cards',
-//   description: 'X Cards: Power Up Your Tweet Marketing on X.com',
-// }
-
 export const metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
@@ -21,6 +16,8 @@ export const metadata = {
   openGraph: siteConfig.openGraph,
   twitter: siteConfig.twitter,
 };
+
+
 
 
 export default function RootLayout({
@@ -41,6 +38,19 @@ export default function RootLayout({
     }
   }
 
+  const getGoogleAnalyticsTag = () => {
+    return {
+      __html: `
+      window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-18KTPX8NV1');
+      `,
+    }
+  }
+
+
   return (
     <html lang="en">
       <head>
@@ -60,6 +70,7 @@ export default function RootLayout({
       </body>
       {/* <Analytics /> */}
       <script dangerouslySetInnerHTML={getClarityAnalyticsTag()} />
+      <script dangerouslySetInnerHTML={getGoogleAnalyticsTag()} />
     </html>
   )
 }
