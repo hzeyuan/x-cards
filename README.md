@@ -6,7 +6,7 @@
 
 [English](README.md) | [中文](README_ZH.md)
 
-[![x-cards intro](https://img.youtube.com/vi/v8iQV8ZoVBk/0.jpg)](https://www.youtube.com/watch?v=v8iQV8ZoVBk)
+[![x-cards intro](https://img.youtube.com/vi/v8iQV8ZoVBk/0.jpg)](https://youtu.be/okCIZrFrTCE)
 
 easy to use x-cards in x.com
 

@@ -29,7 +29,7 @@ const Hero = () => {
                 </div>
             </div>
             <div className='mx-auto'>
-                <ReactPlayer url="https://www.youtube.com/watch?v=v8iQV8ZoVBk" />
+                <ReactPlayer url="https://youtu.be/okCIZrFrTCE" />
             </div>
         </div>
     )
