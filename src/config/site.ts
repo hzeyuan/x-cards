@@ -26,12 +26,12 @@ const baseSiteConfig = {
     creator: '@Zane Ryan',
     themeColor: '#fff',
     icons: {
-        icon: "https://x-cards.net/xcards/favicon/favicon.ico",
-        android: "https://x-cards.net/xcards/favicon/android-chrome-192x192.png",
-        shortcut: "https://x-cards.net/xcards/favicon/favicon.ico",
-        apple: "https://x-cards.net/xcards/favicon/apple-touch-icon.png",
+        icon: "https://static.usesless.com/x-cards/favicon/favicon.ico",
+        android: "https://static.usesless.com/x-cards/favicon/android-chrome-192x192.png",
+        shortcut: "https://static.usesless.com/x-cards/favicon/favicon.ico",
+        apple: "https://static.usesless.com/x-cards/favicon/apple-touch-icon.png",
     },
-    ogImage: "https://x-cards.net/xcards/favicon/assets/v0.02-demo.jpg",
+    ogImage: "https://static.usesless.com/x-cards/favicon/assets/v0.02-demo.jpg",
     links: {
         github: "https://github.com/hzeyuan/x-cards",
     },

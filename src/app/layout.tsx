@@ -55,6 +55,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-18KTPX8NV1"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
