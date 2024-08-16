@@ -53,8 +53,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta charSet="utf-8" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-18KTPX8NV1"></script>
+        <script dangerouslySetInnerHTML={getGoogleAnalyticsTag()} />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
@@ -70,7 +71,6 @@ export default function RootLayout({
       </body>
       {/* <Analytics /> */}
       <script dangerouslySetInnerHTML={getClarityAnalyticsTag()} />
-      <script dangerouslySetInnerHTML={getGoogleAnalyticsTag()} />
     </html>
   )
 }
