@@ -60,7 +60,7 @@ export const InputCode = ({ onClose }) => {
         <motion.div
             animate={{ scale: [0.1, 1] }}
             exit={{ scale: 0 }}
-            className="fixed inset-0 bg-gray-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center">
+            className="fixed inset-0  z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center">
             <div className="bg-gray-800 p-8 shadow-lg w-full max-w-md rounded-xl border border-gray-700 relative">
                 <button
                     className='absolute right-3 top-3 z-10 hover:bg-gray-700 rounded-full p-1 transition-colors duration-200'

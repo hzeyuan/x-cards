@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/sonner"
-// import { Analytics } from "@vercel/analytics/react"
 import Logo from '@assets/icon.png'
 import './globals.css'
 import { siteConfig } from "@src/config/site";

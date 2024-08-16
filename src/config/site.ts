@@ -23,7 +23,7 @@ const baseSiteConfig = {
             url: "https://github.com/hzeyuan",
         }
     ],
-    creator: '@Zane Ryan',
+    creator: '@IndieDevr',
     themeColor: '#fff',
     icons: {
         icon: "https://static.usesless.com/x-cards/favicon/favicon.ico",
@@ -31,7 +31,7 @@ const baseSiteConfig = {
         shortcut: "https://static.usesless.com/x-cards/favicon/favicon.ico",
         apple: "https://static.usesless.com/x-cards/favicon/apple-touch-icon.png",
     },
-    ogImage: "https://static.usesless.com/x-cards/favicon/assets/v0.02-demo.jpg",
+    ogImage: "https://static.usesless.com/x-cards/favicon/x-cards-og.png",
     links: {
         github: "https://github.com/hzeyuan/x-cards",
     },
@@ -43,6 +43,7 @@ export const siteConfig = {
         type: "website",
         locale: "en_US",
         url: baseSiteConfig.url,
+        image: baseSiteConfig.ogImage,
         title: baseSiteConfig.name,
         description: baseSiteConfig.description,
         siteName: baseSiteConfig.name,
@@ -50,6 +51,7 @@ export const siteConfig = {
     twitter: {
         card: "summary_large_image",
         title: baseSiteConfig.name,
+        image: baseSiteConfig.ogImage,
         description: baseSiteConfig.description,
         images: [`${baseSiteConfig.url}/xcards/favicon/x-cards-og.png`],
         creator: baseSiteConfig.creator,

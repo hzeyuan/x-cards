@@ -39,7 +39,7 @@ easy to use x-cards in x.com
 
 </div>
 
-⚡ **X Cards** Share X anywhere ,any format,
+⚡ **X Cards** Share Tweet anywhere ,any format,
 
 ## Project Background
 
@@ -83,10 +83,19 @@ X is a source of information for many platforms，So this project came into bein
 
 ## features
 
-- Easy to access, just a simple click away.
-- Obtain videos, images, text, likes, and browsing history effortlessly.
-- Export in multiple formats, including JSON, Markdown, PNG, JPEG, and SVG.
-- Template feature to save your frequently used card styles.
+* Added real-time preview feature, now a toast in the upper right corner allows you to observe the generated card.
+
+* Introduced customization for card background color.
+
+* Customizable card width.
+
+* Improved: Now clicking defaults to copying the image, rather than downloading the image.
+
+* Fixed the issue of unable to fetch cover image for videos.
+
+* Added support for fetching continuous posts.
+
+* Enabled dynamic addition, deletion, dragging, and management of posts.
 
 <br/>
 
