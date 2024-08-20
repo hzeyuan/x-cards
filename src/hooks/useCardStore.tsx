@@ -1,3 +1,4 @@
+import type { TweetControlState } from '@src/components/extension/use-tweet-collection';
 import { create } from 'zustand'
 
 
@@ -152,14 +153,10 @@ export interface CardStore {
         texturePosition: string,
         texture: string,
         borderWidth: number,
-        // borderColor: string,
-        // borderStyle: string,
+        controls: TweetControlState
+        fontFamily: string,
 
     },
-    fontStyles: {
-        fontFamily?: string,
-    }
-    setFontStyles: (fontStyles: any) => void;
     tabConfig: {
         openCustomColor: boolean,
     }
@@ -207,17 +204,6 @@ export const useCardStore = create<CardStore>(
         },
         colorIndex: 0,
         setColorIndex: (colorIndex) => set({ colorIndex }),
-        fontStyles: {
-            fontFamily: 'sans-serif',
-        },
-        setFontStyles: (fontStyles) => {
-            set({
-                fontStyles: {
-                    ...get().fontStyles,
-                    ...fontStyles
-                }
-            })
-        },
         tabConfig: {
             openCustomColor: false
         },
@@ -269,12 +255,18 @@ export const useCardStore = create<CardStore>(
             fontSize: 16,
             scale: 100,
             texture: '',
-            // boxShadow: '0px 0px 0px rgba(0, 0, 0, 0.1)',
-            // padding: 20,
+            fontFamily: 'sans-serif',
             hasNoiseTexture: false,
             noiseTextureOpacity: 0.05,
             texturePosition: 'center',
             borderWidth: 0,
+            controls: {
+                showUser: true,
+                showActions: true,
+                showTime: true,
+                showFooter: true,
+                showLogo: true,
+            }
 
         },
         updateCardStyles: (partCardStyles) => {

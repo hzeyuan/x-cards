@@ -6,59 +6,6 @@ import { useTweetsStore } from './use-tweet-collection';
 import toast from 'react-hot-toast';
 
 
-const LockOverlay = ({ onRemoveItem }) => {
-
-    const handleLockClick = () => {
-        onRemoveItem?.();
-    };
-
-    return (
-
-        <div
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backdropFilter: 'blur(5px)', // 磨砂玻璃效果
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 20,
-            }}
-        >
-            <svg
-
-                onClick={handleLockClick}
-                style={{ cursor: 'pointer' }}
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    d="M19 11H5C3.89543 11 3 11.8954 3 13V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V13C21 11.8954 20.1046 11 19 11Z"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-            </svg>
-        </div>
-
-    );
-};
-
-
 const TweetManager: React.FC<{
     tweetInfos: XConfig[];
     onRemoveItem?: (tweetInfos: XConfig[]) => void;
@@ -68,7 +15,6 @@ const TweetManager: React.FC<{
     const isActivated = useTweetsStore((state) => state.isActivated);
     const tweets = useTweetsStore(state => state.tweets);
     const setTweets = useTweetsStore(state => state.setTweets);
-    const setShowCodeDialog = useTweetsStore(state => state.setShowCodeDialog);
 
     const [items, setItems] = useState<(
         XConfig & {
@@ -141,37 +87,16 @@ const TweetManager: React.FC<{
 
     return (
         <div className=" "
-            style={{ position: 'relative' }}
         >
-            <div className="flex justify-between items-center mb-2">
-                <h2 className="text-white text-md font-bold">Tweet Collection</h2>
-                <div className="flex space-x-2">
-                    <button
-                        onClick={() => {
-                            setItems(tweetInfos.map(
-                                (tweet, index) => ({
-                                    ...tweet,
-                                    id: index,
-                                })
-                            ));
-                            onReset?.(tweetInfos);
-                        }}
-                        className="text-gray-400 hover:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            {!isActivated && (<LockOverlay onRemoveItem={() => {
-                setShowCodeDialog(true);
-            }} />)}
 
-            <SortableList<XConfig>
-                items={items}
-                setItems={setItems}
-                renderItem={renderItem}
-            />
+            <div className=' relative'>
+                <SortableList<XConfig>
+                    items={items}
+                    setItems={setItems}
+                    renderItem={renderItem}
+                />
+            </div>
+
         </div>
     )
 };

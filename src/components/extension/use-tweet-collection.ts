@@ -1,7 +1,30 @@
-import type { XConfig } from "@src/hooks/useCardStore";
+import type { CardStore, XConfig } from "@src/hooks/useCardStore";
 import { create } from "zustand";
+import { fontSizeMap } from "./x-cards-toast/font-control";
+
+export interface TweetControlState {
+    showUser: boolean;
+    showActions: boolean;
+    showTime: boolean;
+    showFooter: boolean;
+    showLogo: boolean;
+}
+
+export interface CardConfig {
+    padding: number;
+    format: string,
+    controls: TweetControlState
+    width: number;
+    colorIndex: number;
+    scale: number;
+    fontSize: string;
+    fontFamily: string;
+}
 
 interface TweetCollection {
+
+    cardConfig: Partial<CardConfig>;
+    setCardConfig: (cardConfig: Partial<CardConfig>) => void;
     isActivated: boolean;
     setIsActivated: (isActivated: boolean) => void;
     imageSrc?: string;
@@ -25,6 +48,20 @@ interface TweetCollection {
 
 export const useTweetsStore = create<TweetCollection>(
     (set, get) => ({
+        cardConfig: {
+            padding: 0,
+            scale: 2,
+            fontSize: fontSizeMap['xl'],
+        },
+        setCardConfig: (cardConfig) => {
+            const oldCardConfig = get().cardConfig;
+            set({
+                cardConfig: {
+                    ...oldCardConfig,
+                    ...cardConfig
+                }
+            })
+        },
         showCodeDialog: false,
         setShowCodeDialog: (showCodeDialog: boolean) => {
             set({

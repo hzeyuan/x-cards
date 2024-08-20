@@ -16,7 +16,6 @@ export const TemplateList = () => {
                 return (
                     <Button size="sm" key={index} variant="secondary"
                         onClick={() => {
-                            setFontStyles(t.fontStyles)
                             setColorIndex(t.colorIndex)
                             updateBackgroundStyles(t.backgroundStyles)
                             updateCardStyles(t.cardStyles)

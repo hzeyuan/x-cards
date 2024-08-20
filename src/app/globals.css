@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -60,25 +59,31 @@
   }
 }
 
-
-
+/* #card {
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "system-ui",
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+} */
 
 .sidebar-active {
   --tw-bg-opacity: 0.2;
   /* background-color: rgba(243, 244, 246, var(--tw-bg-opacity)); bg-gray-100 */
   background-color: rgba(156, 163, 175, var(--tw-bg-opacity)); /* bg-gray-400 */
   --tw-text-opacity: 1;
-  color: rgba(11, 166, 101, var(--tw-text-opacity)) 
+  color: rgba(11, 166, 101, var(--tw-text-opacity));
   /* text-indigo-500 */
-
-}
-
-.sidebar-active-dark {
-  /* --tw-bg-opacity: 1; */
-  /* background-color: rgb(31 41 55 / var(--tw-bg-opacity)); bg-gray-800 */
-  /* --tw-text-opacity: 1; */
-  /* color: rgba(255, 255, 255, var(--tw-text-opacity)) text-white */
-
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -86,9 +91,6 @@
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
-
-
-

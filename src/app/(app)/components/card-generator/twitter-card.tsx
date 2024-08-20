@@ -7,75 +7,40 @@ import { formatTimestamp } from '@src/app/utils/format';
 import type { CardStore, XConfig } from '@src/hooks/useCardStore';
 
 interface TwitterCardProps {
-    xConfig: XConfig,
+    xConfig: XConfig[],
     backgroundStyles: CardStore['backgroundStyles'],
     cardStyles: CardStore['cardStyles'],
-    fontStyles: CardStore['fontStyles'],
 }
 
-export const TwitterCard: React.FC<TwitterCardProps> = ({ xConfig, backgroundStyles, cardStyles, fontStyles }) => {
-    // console.log('xConfig', xConfig, backgroundStyles, cardStyles);
-
+export const TwitterCard: React.FC<TwitterCardProps> = ({ xConfig, backgroundStyles, cardStyles }) => {
     const card = useMemo(() => {
-        const cardStyle = cardStyles.style;
-        if (cardStyle === 'posts') {
-            return (
-                <div className='flex flex-col gap-y-4'>
-                    {_.isArray(xConfig) ?
-                        xConfig.map((config, index) => (
-                            <div className="flex flex-col h-full" key={`xConfig-${index}`}>
-                                <CardHeader xConfig={config} />
-                                <CardBody xConfig={config} cardStyles={cardStyles} />
-                                <CardFooter xConfig={config} />
-                            </div>
-                        )) : <div className="flex flex-col h-full">
-                            <CardHeader xConfig={xConfig} />
-                            <CardBody xConfig={xConfig} cardStyles={cardStyles} />
-                            <CardFooter xConfig={xConfig} />
+        const controls = cardStyles.controls;
+        return (
+            <div className='flex flex-col gap-y-4 relative'>
+                {
+                    xConfig.map((config, index) => (
+                        <div className="flex flex-col h-full" key={`xConfig-${index}`}>
+                            <CardHeader xConfig={config} controls={controls} />
+                            <CardBody xConfig={config} cardStyles={cardStyles} />
+                            {controls.showFooter && (<CardFooter xConfig={config} />)}
                         </div>
-                    }
+                    ))
+                }
+                <div className=' absolute right-0 bottom-0 opacity-40 text-[##6d6d6d]'>
+                    ∙ Made with x-cards.net
                 </div>
-            )
-        } else if (cardStyle === 'article') {
-            const time = _.isArray(xConfig) ? _.last(xConfig).time : xConfig.time;
-            return (
-                <div className='flex flex-col gap-y-4'>
-                    {_.isArray(xConfig) ?
-                        xConfig.map((config, index) => (
-                            <div className="flex flex-col h-full" key={`xConfig-${index}`}>
-                                <CardBody xConfig={config} cardStyles={cardStyles} />
-                            </div>
-                        )) : <div className="flex flex-col h-full">
-                            <CardBody xConfig={xConfig} cardStyles={cardStyles} />
-                        </div>
-                    }
-                    <div>
-                        <div className="text-secondary-foreground flex items-center " style={{ paddingBottom: "0.5em", paddingTop: '0.5rem' }}>
-                            <span>{formatTimestamp(time)}</span>
-                            <p style={{
-                                fontSize: '12px',
-                                color: '#7b7b7b',
-                                marginLeft: '0.5em',
-                            }}> {'∙ Made with x-cards.net'}</p>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
+            </div>
+        )
     }, [backgroundStyles, xConfig, cardStyles]);
 
     return (
         <div
             id="card"
             //  aspect-video
-            className=" flex h-full"
+            className="flex h-fit"
             style={{
                 boxShadow: 'rgba(245, 208, 254, 0.3) 0px 0px 200px',
                 width: cardStyles.width,
-                // height: cardStyles.height,
-                // aspectRatio: cardStyles.aspectRatio,
-                // transform: `scale(${cardStyles.scale})`,
-                // h-[1080px]
             }}
         >
             <div className="relative w-full grid place-items-center mobile-scaling pointer-events-none">
@@ -98,8 +63,9 @@ export const TwitterCard: React.FC<TwitterCardProps> = ({ xConfig, backgroundSty
                             className="relative z-20 transition-all w-full card-holder"
                             style={{
                                 transform: `scale(${cardStyles.scale}%)`,
-                                // maxWidth: `${cardStyles.width}px`,
-                                fontFamily: fontStyles?.fontFamily && `'${fontStyles?.fontFamily}', sans-serif`,
+                                // pointer-events: none;
+                                // fontFamily: cardStyles?.fontFamily && `'${cardStyles?.fontFamily}', sans-serif`,
+                                // fontFamily: 'ui-sans-serif',
                             }}
                         >
                             {/* Card body */}
@@ -125,7 +91,7 @@ export const TwitterCard: React.FC<TwitterCardProps> = ({ xConfig, backgroundSty
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
@@ -166,33 +132,39 @@ const BackgroundLayers = ({ backgroundStyles, cardStyles }) => (
     </>
 );
 
-const CardHeader = ({ xConfig }) => (
-    <div className='flex w-full'>
-        <div className="flex  flex-grow items-center pb-3">
-            <img
-                src={xConfig?.avatar || ''}
-                className="inline object-cover rounded-full transition-all duration-150"
-                alt="Profile image"
-                style={{
-                    width: "3em",
-                    height: "3em",
-                    marginRight: "0.75em"
-                }}
-            />
-            <div>
-                <div className="flex text-secondary-foreground" style={{ fontWeight: 600, lineHeight: "1.2" }}>
-                    <div className="whitespace-nowrap" style={{ paddingRight: "0.375em", fontSize: 18 }}>
-                        {xConfig.username}
+const CardHeader: React.FC<{
+    xConfig: XConfig,
+    controls: CardStore['cardStyles']['controls'],
+}> = ({ xConfig, controls }) => {
+
+    return (
+        <div className='flex w-full'>
+            {controls.showUser ? (<div className="flex  flex-grow items-center pb-3">
+                <img
+                    src={xConfig?.avatar || ''}
+                    className="inline object-cover rounded-full transition-all duration-150"
+                    alt="Profile image"
+                    style={{
+                        width: "3em",
+                        height: "3em",
+                        marginRight: "0.75em"
+                    }}
+                />
+                <div>
+                    <div className="flex text-secondary-foreground" style={{ fontWeight: 600, lineHeight: "1.2" }}>
+                        <div className="whitespace-nowrap" style={{ paddingRight: "0.375em", fontSize: 18 }}>
+                            {xConfig.username}
+                        </div>
                     </div>
+                    <div className="whitespace-nowrap text-secondary" style={{ fontSize: "1em", fontWeight: 400, lineHeight: "1.2" }} />
                 </div>
-                <div className="whitespace-nowrap text-secondary" style={{ fontSize: "1em", fontWeight: 400, lineHeight: "1.2" }} />
-
-            </div>
-
+            </div>) : <div className='flex w-full pb-3'></div>}
+            {
+                controls.showLogo ? <CardLogo xConfig={xConfig} /> : <></>
+            }
         </div>
-        <CardLogo xConfig={xConfig}></CardLogo>
-    </div>
-);
+    );
+}
 
 const CardLogo = ({ xConfig }) => {
     return (<div className='flex justify-center'>
@@ -248,13 +220,7 @@ const CardFooter = ({ xConfig }) => {
         <div>
             <div className="text-secondary-foreground flex items-center " style={{ paddingBottom: "0.5em", paddingTop: '0.5rem' }}>
                 <span>{formatTimestamp(time)}</span>
-                <p style={{
-                    fontSize: '12px',
-                    color: '#7b7b7b',
-                    // textAlign: 'right',
-                    marginLeft: '0.5em',
-                    // marginTop: '1em'
-                }}> {'∙ Made with x-cards.net'}</p>
+
             </div>
             <div className='flex  items-center justify-between'>
                 <div className="flex">
@@ -267,12 +233,6 @@ const CardFooter = ({ xConfig }) => {
                         </div>
                     ))}
                 </div>
-                {/* <div
-                    style={{
-                        fontSize: '14px',
-                        color: '#7b7b7b',
-                        textAlign: 'right',
-                    }}> {'留下你的推广文案'}</div> */}
             </div>
         </div>
     );

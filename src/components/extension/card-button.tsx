@@ -1,7 +1,7 @@
 import { DynamicStyleTippyComponent } from "@src/app/(app)/components/dynamic-style-tippy";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import pRetry from 'p-retry';
-import { checkPostIsThread, copyImage, extractTweetInfo, getPostThread } from "@src/app/utils";
+import { copyImage, extractTweetInfo, getPostThread } from "@src/app/utils";
 import toast from 'react-hot-toast';
 import * as _ from 'lodash-es';
 import { PreviewToast } from "./x-cards-toast";
@@ -13,20 +13,8 @@ export const CardButton: React.FC<{
     anchor: PlasmoCSUIAnchor
 }> = ({ anchor }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [isThread, setIsThread] = useState(false);
 
-
-    ;
     const cardConfig = useRef({});
-
-    useEffect(() => {
-        // const testE = document.querySelector('#react-root > div > div > div.css-175oi2r.r-1f2l425.r-13qz1uu.r-417010.r-18u37iz > main > div > div > div > div.css-175oi2r.r-16331v6.r-dgm4ly.r-1ua6aaf.r-th6na.r-1phboty.r-16y2uox.r-184en5c.r-1c4cdxw.r-1t251xo.r-f8sm7e.r-13qz1uu.r-1ye8kvj > div > section > div > div > div:nth-child(5) > div > div > article > div > div > div.css-175oi2r.r-18u37iz > div.css-175oi2r.r-18kxxzh.r-1wron08.r-onrtq4.r-1awozwy > div.css-175oi2r.r-1bnu78o.r-f8sm7e.r-m5arl1.r-16y2uox.r-14gqq1x');
-        // console.log('testE', checkIsThread(testE));
-        const postElement = anchor.element.closest('article[data-testid="tweet"]');
-        const isThread = checkPostIsThread(postElement);
-        setIsThread(isThread);
-    }, [])
-
 
     const handleCopyAsCellCard = async (e) => {
         e.stopPropagation();
@@ -37,18 +25,17 @@ export const CardButton: React.FC<{
             const postElement = anchor.element.closest('article[data-testid="tweet"]');
             const tweetInfo = extractTweetInfo(postElement)
             const imageSrc = await pRetry(async () => {
-                // console.log('cardConfig.current', cardConfig.current);
                 return copyImage(tweetInfo, cardConfig.current);
             }, {
-                retries: 3,
+                retries: 10,
             });
 
             const thread = getPostThread(postElement);
             const tweetInfos = _.compact(thread?.map(e => extractTweetInfo(e)));
 
-            toast.success("👏  Copy the card to clipboard", {
-                duration: 500,
-            })
+            // toast.success("👏  Copy the card to clipboard", {
+            //     duration: 500,
+            // })
 
             useTweetsStore.setState((state) => {
                 state.tweets = tweetInfos;
@@ -60,7 +47,6 @@ export const CardButton: React.FC<{
             toast.custom((t) => {
                 return (<PreviewToast
                     anchor={anchor}
-                    tweetMode={isThread ? 'linear' : 'single'}
                     tweetInfos={tweetInfos}
                     tweetInfo={tweetInfo}
                 ></PreviewToast>)
@@ -105,7 +91,6 @@ export const CardButton: React.FC<{
             toast.custom((t) => {
                 return (<PreviewToast
                     anchor={anchor}
-                    tweetMode={'linear'}
                     tweetInfos={tweetInfos}
                     tweetInfo={tweetInfo}
                 ></PreviewToast>)
@@ -131,22 +116,11 @@ export const CardButton: React.FC<{
                     onClick={handleClick}
                 >
                     <Plus className="dropdown-menu-icon"></Plus>
-                    {/* <svg
-                        className="dropdown-menu-icon"
-                        viewBox="0 0 1024 1024"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={256}
-                        height={256}
-                    >
-                        <path
-                            fill="white"
-                            d="M839.68 787.2V148.685A71.68 71.68 0 00768 77.005H270.438a71.68 71.68 0 00-71.68 71.68v638.464zm-641.382 33.075v45.261a71.68 71.68 0 0071.68 71.68h497.561a71.68 71.68 0 0071.68-71.68v-45.26z" />
-                    </svg> */}
                     Add to Collection
                 </li>
             </ul>
         </div>)
-    }, [isThread])
+    }, [])
 
     return (
         <DynamicStyleTippyComponent

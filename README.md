@@ -45,28 +45,38 @@ easy to use x-cards in x.com
 
 X is a source of information for many platforms，So this project came into being
 
-
-
-
 ## Changelog
+
+<details>
+<summary><strong>v0.0.3</strong></summary>
+
+* Performance Optimization: Utilized web workers for image generation, addressing issues with blank spaces on X.com after scrolling down.
+* Enhanced Padding Settings: Added the ability to adjust padding within the card for better layout control.
+* Image Quality Settings: Introduced options to set the quality of generated images for export.
+* Markdown Export: Now supports exporting content in Markdown format for easy integration into documentation or blogs.
+* Font Size Adjustment: Added support for modifying font sizes to improve readability and customization.
+* Interaction Optimization: After installing the plugin or clicking the icon, redirect to the welcome page.
+
+![Download Extension](./assets/v0.02-demo.jpg)
+
+</details>
 
 <details>
 <summary><strong>v0.0.2</strong></summary>
 
+- Added real-time preview feature, now a toast in the upper right corner allows you to observe the generated card.
 
-* Added real-time preview feature, now a toast in the upper right corner allows you to observe the generated card.
+- Introduced customization for card background color.
 
-* Introduced customization for card background color.
+- Customizable card width.
 
-* Customizable card width.
+- Improved: Now clicking defaults to copying the image, rather than downloading the image.
 
-* Improved: Now clicking defaults to copying the image, rather than downloading the image.
+- Fixed the issue of unable to fetch cover image for videos.
 
-* Fixed the issue of unable to fetch cover image for videos.
+- Added support for fetching continuous posts.
 
-* Added support for fetching continuous posts.
-
-* Enabled dynamic addition, deletion, dragging, and management of posts.
+- Enabled dynamic addition, deletion, dragging, and management of posts.
 
 ![Download Extension](./assets/v0.02-demo.jpg)
 
@@ -75,39 +85,35 @@ X is a source of information for many platforms，So this project came into bein
 <details>
 <summary><strong>v0.0.1</strong></summary>
 
-* Easy to access, just a simple click away.
-* Obtain videos, images, text, likes。
-* Export in multiple formats, including JSON, Markdown, PNG, JPEG, and SVG.
+- Easy to access, just a simple click away.
+- Obtain videos, images, text, likes。
+- Export in multiple formats, including JSON, Markdown, PNG, JPEG, and SVG.
 
 </details>
 
 ## features
 
-* Added real-time preview feature, now a toast in the upper right corner allows you to observe the generated card.
+- Added real-time preview feature, now a toast in the upper right corner allows you to observe the generated card.
 
-* Introduced customization for card background color.
+- Introduced customization for card background color.
 
-* Customizable card width.
+- Customizable card width.
 
-* Improved: Now clicking defaults to copying the image, rather than downloading the image.
+- Improved: Now clicking defaults to copying the image, rather than downloading the image.
 
-* Fixed the issue of unable to fetch cover image for videos.
+- Fixed the issue of unable to fetch cover image for videos.
 
-* Added support for fetching continuous posts.
+- Added support for fetching continuous posts.
 
-* Enabled dynamic addition, deletion, dragging, and management of posts.
+- Enabled dynamic addition, deletion, dragging, and management of posts.
 
 <br/>
 
 ## How to Use
 
-
-
 ### [chrome web Store](https://chromewebstore.google.com/detail/x-card/mbinooofmcjhjklihfejnkkebffceeop)
 
-
-
-##  or
+## or
 
 1. Download Extension
 

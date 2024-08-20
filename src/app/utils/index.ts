@@ -1,9 +1,10 @@
 import * as _ from 'lodash-es';
 
-import { toPng, toJpeg, toSvg } from 'html-to-image';
+import { domToPng, domToJpeg, domToSvg, type Options, createContext, destroyContext } from 'modern-screenshot'
 import type { XConfig } from '@src/hooks/useCardStore';
 import { iframeMessageSystem } from './IFrameMessageSystem';
 import { checkAppliedStyle, getAdjacentCellDiv, traverseAndCheck } from './element';
+
 
 
 export function checkTheVerticalLine(element) {
@@ -86,82 +87,14 @@ export const getPostThread = (postElement) => {
 }
 
 
-export const generateImage = async (options: {
-  // data?: XConfig[],
-  format: string
-  width?: number,
-  height?: number,
-  quality?: number
-}) => {
-
-  const cardEle = document.querySelector('#card') as HTMLElement;
-  const { format, width, height, quality = 0.95 } = options;
-  // console.log('format', format, width, height, quality);
-  const pixelRatio = 2;
-  // 存储原始尺寸
-  const originalWidth = cardEle.style.width;
-  const originalHeight = cardEle.style.height;
-
-  const waitForImages = () => {
-    const images = cardEle.querySelectorAll('img');
-    const imagePromises = Array.from(images).map(img => {
-      if (img.complete) {
-        return Promise.resolve();
-      } else {
-        return new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = reject;
-        });
-      }
-    });
-    return Promise.all(imagePromises);
-  };
-
-  try {
-
-    await waitForImages();
-
-    // 如果提供了新的尺寸，则应用它们
-    let dataUrl: string;
-    const exportOptions = {
-      quality,
-      pixelRatio,
-    };
-
-    switch (format) {
-      case 'png':
-        dataUrl = await toPng(cardEle, {
-          ...exportOptions,
-        });
-        break;
-      case 'jpeg':
-        dataUrl = await toJpeg(cardEle, exportOptions);
-        break;
-      case 'svg':
-        dataUrl = await toSvg(cardEle, exportOptions);
-        break;
-      default:
-        throw new Error('Unsupported format');
-    }
-
-    return dataUrl;
-  } catch (err) {
-    console.error('Error exporting image:', err);
-    return 'error: ' + (err as Error).message;
-  } finally {
-  }
-}
 
 export type CopyImage = (tweetInfo: XConfig | XConfig[], cardConfig: any) => Promise<string>;
 export const copyImage: CopyImage = async (tweetInfo, cardConfig = {}) => {
-  // console.log('tweetInfo', tweetInfo, cardConfig);
-
   const format2Array = _.isArray(tweetInfo) ? tweetInfo : [tweetInfo];
-
   const value = await sendMessageToIframe('generate-card-local', {
     tweetInfo: format2Array,
     cardConfig
-  });
+  }, 3000);
 
   const imageDataUrl = value.dataUrl;
 
@@ -193,8 +126,8 @@ export const downloadImage = async (tweetInfo: XConfig | XConfig[], cardConfig =
 
   const value = await sendMessageToIframe('generate-card-local', {
     tweetInfo: format2Array,
-    cardConfig
-  });
+    cardConfig,
+  }, 3000);
   const { url, dataUrl } = value;
   const xName = 'x-card'
   //  tweetInfo.username || 'x-card';
@@ -320,7 +253,7 @@ export function extractTweetInfo(postElement) {
 }
 
 export const findXCardsIframe = () => {
-  const shadowRoot = document.querySelector("plasmo-csui#x-cards-overlay")?.shadowRoot;
+  const shadowRoot = document.querySelector("xcards-ui")?.shadowRoot;
   if (!shadowRoot) throw new Error('Shadow root not found');
 
   const iframe = shadowRoot.getElementById('x-card-ai') as HTMLIFrameElement;

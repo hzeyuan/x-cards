@@ -39,6 +39,9 @@ const HomePage = () => {
                     <Hero />
                 </div>
             </div>
+
+
+
         </div>
     );
 };

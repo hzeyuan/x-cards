@@ -5,7 +5,7 @@ import { type CardStore } from './useCardStore'
 
 
 
-export type Template = Pick<CardStore, 'fontStyles' | 'colorIndex' | 'backgroundStyles' | 'cardStyles' | 'tabConfig'> & {
+export type Template = Pick<CardStore, 'colorIndex' | 'backgroundStyles' | 'cardStyles' | 'tabConfig'> & {
     name: string;
 }
 

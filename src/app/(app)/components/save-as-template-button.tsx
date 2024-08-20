@@ -30,7 +30,6 @@ export const SaveAsTemplateButton = () => {
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={() => addTemplate({
                     name: name,
-                    fontStyles: useCardStore.getState().fontStyles,
                     colorIndex: useCardStore.getState().colorIndex,
                     backgroundStyles: backgroundStyles,
                     tabConfig: useCardStore.getState().tabConfig,

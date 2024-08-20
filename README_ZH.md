@@ -10,7 +10,6 @@
 
 轻松的X平台上使用x-cards
 
-
 [![][vercel-shield]][vercel-link]
 
 [![][share-x-shield]][share-x-link]
@@ -46,54 +45,60 @@
 
 X是许多平台的信息来源，因此产生了这个项目。
 
-
 ## Changelog
+
+<details>
+<summary><strong>v0.0.3</strong></summary>
+
+- 优化性能，使用web worker生成图片， 处理下拉后x.com空白问题。
+- 增加padding设置，调整卡片内边距。
+- 增加生成图片质量设置。
+- 增加md格式导出。
+- 支持调整字体大小。
+- 交互优化，安装插件后或者，点击icon，跳转到welcome页面。
 
 <details>
 <summary><strong>v0.0.2</strong></summary>
 
-* 新增实时预览功能，现在右上角有个toast可以观察到生成的卡片。
-* 引入了自定义卡片背景颜色。
-* 可自定义卡片宽度。
-* 改进：现在点击默认复制图片，而不是下载图片。
-* 修复了视频获取封面图的问题。
-* 增加了连续帖子获取的支持。
-* 实现了帖子的动态添加、删除、拖拽和管理。
+- 新增实时预览功能，现在右上角有个toast可以观察到生成的卡片。
+- 引入了自定义卡片背景颜色。
+- 可自定义卡片宽度。
+- 改进：现在点击默认复制图片，而不是下载图片。
+- 修复了视频获取封面图的问题。
+- 增加了连续帖子获取的支持。
+- 实现了帖子的动态添加、删除、拖拽和管理。
 
 </details>
 
 <details>
 <summary><strong>v0.0.1</strong></summary>
 
-* 点击即可轻松访问。
-* 获取视频、图片、文本、点赞等。
-* 导出多种格式，包括JSON、Markdown、PNG、JPEG和SVG。
+- 点击即可轻松访问。
+- 获取视频、图片、文本、点赞等。
+- 导出多种格式，包括JSON、Markdown、PNG、JPEG和SVG。
 
 </details>
 
-
 ## features
 
-* 简单易用，只需点击一下即生成卡片。
-* 轻松获取视频、图片、文字、点赞和浏览历史。
-* 支持多种格式导出，包括JSON、Markdown、PNG、JPEG和SVG。
-* 模板功能，保存您经常使用的卡片样式。
-
+- 简单易用，只需点击一下即生成卡片。
+- 轻松获取视频、图片、文字、点赞和浏览历史。
+- 支持多种格式导出，包括JSON、Markdown、PNG、JPEG和SVG。
+- 模板功能，保存您经常使用的卡片样式。
 
 <br/>
 
 ## How to Use
 
 1. 点击下载插件
-![Download Extension](./assets/install_guide/1.download.png)
+   ![Download Extension](./assets/install_guide/1.download.png)
 
 2. 浏览器输入 chrome://extensions/ 并打开开发者模式
 
 3. 解压并，拖动整个文件夹到页面，如图：
-![Drag the extension file to the page](./assets/install_guide/2.install.png)
+   ![Drag the extension file to the page](./assets/install_guide/2.install.png)
 
 4. 打开x.com并浏览帖子，您将在右下角找到您的卡片按钮，参考上方视频。
-
 
 ## 开发指南
 
@@ -113,7 +118,6 @@ npm run dev:next
 # Run plugin
 npm run dev:plasmo
 ```
-
 
 ## Starchart
 

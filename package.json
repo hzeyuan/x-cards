@@ -1,7 +1,7 @@
 {
   "name": "x-card",
   "displayName": "X Card",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Easy share  X,anywhere,in any format",
   "keywords": [
     "x",
@@ -35,6 +35,7 @@
     "@radix-ui/react-slider": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@supabase/supabase-js": "^2.45.1",
     "@tippyjs/react": "^4.2.6",
@@ -58,6 +59,7 @@
     "markmap-lib": "^0.17.0",
     "markmap-view": "^0.17.0",
     "mini-svg-data-uri": "^1.4.4",
+    "modern-screenshot": "^4.4.39",
     "next": "14.1.0",
     "next-themes": "^0.3.0",
     "p-limit": "^6.1.0",
@@ -107,7 +109,8 @@
   },
   "manifest": {
     "permissions": [
-      "storage"
+      "storage",
+       "tabs"
     ],
     "key": "$CRX_PUBLIC_KEY"
   }

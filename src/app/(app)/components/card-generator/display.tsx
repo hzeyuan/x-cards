@@ -4,12 +4,12 @@ import { useMemo } from "react"
 
 import { presets } from "./color"
 import { TwitterCard } from "./twitter-card"
+import { WeChatCard } from "./wechat-card"
 
 export const Display = () => {
     const colorIndex = useCardStore((state) => state.colorIndex)
     const cardStyles = useCardStore((state) => state.cardStyles)
     const tabConfig = useCardStore((state) => state.tabConfig);
-    const fontStyles = useCardStore((state) => state.fontStyles);
     const backgroundStyles = useCardStore((state) => state.backgroundStyles)
     const xConfig = useCardStore((state) => state.xConfig)
 
@@ -81,9 +81,10 @@ export const Display = () => {
                     // width: '1920px',
                     // height: '1080px',
                 }}
-                fontStyles={fontStyles}
                 backgroundStyles={finalBackgroundStyles}
             ></TwitterCard>
+
+            {/* <WeChatCard xConfig={xConfig}></WeChatCard> */}
         </div>
     )
 }

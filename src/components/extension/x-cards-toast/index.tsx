@@ -5,40 +5,44 @@ import { Copy, Download, Loader2, X } from 'lucide-react';
 import { sendMessageToIframe } from '@src/app/utils';
 import { CardWidths, type XConfig } from '@src/hooks/useCardStore';
 
-import Tabs from '../tabs';
 import type { PlasmoCSUIProps } from 'plasmo';
-import AdvancedImagePreview from './image-preview';
 import TweetManager from '../tweet-manager';
 import toast from 'react-hot-toast';
 import { cn } from '@lib/utils';
 import { InputCode } from '../input-code';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTweetsStore } from '../use-tweet-collection';
+import ImagePreview from './image-preview';
+import { Button } from '@components/ui/button';
+import PaddingControl from './padding-control';
+import TweetControl from './tweet-control';
+import { tweet2Markdown } from '@src/app/utils/export';
+import ScaleControl from './scale-control';
+import FontControl from './font-control';
 
 
 interface PreviewToastProps {
     tweetInfo: XConfig;
     tweetInfos: XConfig[];
     anchor: PlasmoCSUIProps['anchor'],
-    tweetMode: 'single' | 'linear';
 }
 
-export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfos, anchor, tweetMode }) => {
+export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfos, anchor, }) => {
     const [isLoading, setIsLoading] = useState(false);
     const srcRef = useRef<string>();
-    // const [showCodeDialog, setShowCodeDialog] = useState(false);
     const showCodeDialog = useTweetsStore(state => state.showCodeDialog);
     const setShowCodeDialog = useTweetsStore(state => state.setShowCodeDialog);
 
     const setImageSrc = useTweetsStore(state => state.setImageSrc);
-    const [tweetStyle, setTweetStyle] = useState('posts');
-    const cardConfig = useRef({});
+    const [tweetStyle] = useState('posts');
+    // const cardConfig = useRef({});
     const [selectedFormat, setSelectedFormat] = useState('png');
     const [selectedWidth, setSelectWidth] = useState('md');
-    const formats = ['png', 'jpeg', 'svg'];
-    const cardStyles = ['posts', 'article',];
+    const formats = ['png', 'jpeg', 'svg', 'md'];
+    // const cardStyles = ['posts', 'article',];
+    const cardConfig = useTweetsStore(state => state.cardConfig);
+    const setCardConfig = useTweetsStore(state => state.setCardConfig);
     const tweets = useTweetsStore(state => state.tweets);
-    const tweetModeRef = useRef<string>(tweetMode || 'single');
     const activeTab = useTweetsStore(state => state.activeTab);
     const isActivated = useTweetsStore((state) => state.isActivated);
     const [isPreview, showIsPreview] = useState(false);
@@ -109,58 +113,12 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
                 boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.2)',
             },
         },
-        widthButtonGridContainer: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '0.5rem',
-            width: '100%',
-        },
-        widthButton: {
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            whiteSpace: 'nowrap' as const,
-            borderRadius: '0.375rem',
-            fontSize: '0.875rem',
-            fontWeight: '500',
-            transition: 'background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s',
-            outline: 'none',
-            boxShadow: '0 0 0 2px rgba(0, 0, 0, 0.2)',
-            backgroundColor: '#262626',
-            color: '#ffffff',
-            height: '2rem',
-            padding: '0.25rem 0.5rem',
-            cursor: 'pointer',
-            border: 'none',
-            '&:hover': {
-                backgroundColor: '#363636',
-            },
-            '&:focus': {
-                boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.2)',
-            },
-        },
         loading: {
             animation: 'spin 1s linear infinite',
-        },
-        gridContainer: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '0.5rem',
-            width: '100%',
-        },
-        col2: {
-            gridTemplateColumns: 'repeat(2, 1fr)',
-        },
-        col3: {
-            gridTemplateColumns: 'repeat(3, 1fr)',
         },
         activeButton: {
             backgroundColor: '#0066cc',
         },
-        label: {
-            fontSize: '14px',
-            color: 'ghostwhite',
-        }
     };
 
     const keyframes = `
@@ -179,10 +137,23 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
     }
 
     const handleCopyImage = async () => {
-        if (!canPass()) {
+        if (selectedFormat === 'md') {
+            const md = tweet2Markdown(tweets);
+            // 复制文本
+            await navigator.clipboard.writeText(md);
+            toast.success('Markdown copied to clipboard', {
+                duration: 100,
+                position: 'top-center',
+            });
             return;
         }
-        const imageSrc = useTweetsStore.getState().imageSrc;
+        const data = await sendMessageToIframe('generate-card-local', {
+            tweetInfo: tweets,
+            cardConfig: {
+                ...cardConfig,
+            },
+        }, 3000);
+        const imageSrc = data.dataUrl;
         const [, mimeType] = imageSrc.match(/^data:(.+);base64,(.+)$/);
         const blob = await fetch(imageSrc).then(res => res.blob());
         await navigator.clipboard.write([
@@ -197,11 +168,27 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
     }
 
     const handleDownloadImage = async () => {
-        if (!canPass()) {
+        if (selectedFormat === 'md') {
+            const md = tweet2Markdown(tweets);
+            const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `x-cards.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
             return;
         }
-        const xName = 'x-card'  //  tweetInfo.username || 'x-card';
-        const imageSrc = useTweetsStore.getState().imageSrc;
+        const xName = 'x-card'
+        const data = await sendMessageToIframe('generate-card-local', {
+            tweetInfo: tweets,
+            cardConfig: {
+                ...cardConfig,
+            },
+        }, 3000);
+        const imageSrc = data.dataUrl;
         const link = document.createElement('a');
         link.download = `${xName}.${selectedFormat || 'png'}`
         link.href = imageSrc;
@@ -209,21 +196,20 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
     }
 
     const handlePreview = async (tweetInfo: XConfig, tweetInfos: XConfig[] = []) => {
-        // console.log('tweetInfo', tweetInfo);
         let finalTweetInfo = [tweetInfo];
+        const cardConfig = useTweetsStore.getState().cardConfig;
         if (activeTab === 'linear') {
             finalTweetInfo = tweetInfos
         }
         try {
             setIsLoading(true);
-            console.time('sendMessageToIframe');
             const value = await sendMessageToIframe('generate-card-local', {
                 tweetInfo: finalTweetInfo,
                 cardConfig: {
-                    ...cardConfig.current,
-                }
-            });
-            console.timeEnd('sendMessageToIframe');
+                    ...cardConfig,
+                    scale: 2,
+                },
+            }, 3000);
             srcRef.current = value.dataUrl;
             setImageSrc(value.dataUrl);
             return value.dataUrl;
@@ -235,37 +221,28 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
     }
 
     const handleColorChange = async (colorIndex: number) => {
-        cardConfig.current = {
-            ...cardConfig.current,
+        setCardConfig({
             colorIndex,
-        }
+        });
         await handlePreview(tweetInfo, tweets);
     }
 
     const handleSelectFormat = (format) => {
-        cardConfig.current = {
-            ...cardConfig.current,
+        setCardConfig({
             format: format.toLowerCase(),
-        }
+        });
         setSelectedFormat(format.toLowerCase());
     }
 
     const handleSelectWidth = async (width: string) => {
         setSelectWidth(width);
-        cardConfig.current = {
-            ...cardConfig.current,
+        setCardConfig({
             width: CardWidths[width],
-        }
+        });
+
         await handlePreview(tweetInfo, tweets);
     }
 
-    const handleSelectCardStyle = async (style: string) => {
-        cardConfig.current = {
-            ...cardConfig.current,
-            style: style.toLowerCase(),
-        }
-        setTweetStyle(style.toLowerCase());
-    }
 
 
     const renderTweetManager = useMemo(() => {
@@ -284,6 +261,7 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
         )
     }, [activeTab])
 
+
     const renderPreview = useMemo(() => {
         return (
             <motion.div
@@ -291,19 +269,17 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
                 layout
                 style={{
                     ...styles.imageContainer,
-                    // 400px
-                    // height: isPreview ? '200px' : '100%', // Adjust these values as needed
                 }}
-                className={cn(isLoading ? 'opacity-50' : '', 'min-w-[256px] min-h-[256px]')}
+                className={cn(isLoading ? 'opacity-50' : '', 'min-w-[290px] min-h-[290px]')}
             >
                 <motion.div
                     animate={{
-                        height: isPreview ? '256px' : '100%',
+                        height: isPreview ? '290px' : '100%',
                     }}
                     transition={{ duration: 0.3 }}
                     className="w-full h-full"
                 >
-                    <AdvancedImagePreview />
+                    <ImagePreview />
                 </motion.div>
                 {isLoading && (
                     <div style={styles.loader}>
@@ -314,7 +290,14 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
             </motion.div>
 
         )
-    }, [isLoading, tweetInfo, tweetInfos, tweets, isPreview])
+    }, [isLoading, tweetInfo, tweetInfos, tweets, isPreview,
+        cardConfig.padding,
+        cardConfig.width,
+        cardConfig.colorIndex,
+        cardConfig.controls,
+        cardConfig.fontSize,
+        cardConfig.fontFamily,
+    ])
 
     const renderControls = <div style={{
         display: 'flex',
@@ -322,62 +305,80 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
 
         flexDirection: 'column',
     }}>
-        <div style={styles.label}>Tweet</div>
-        <Tabs tabs={tabs} />
+        <div className="flex justify-between items-center mb-2">
+            <div className='flex gap-x-2  justify-center items-center '>
+                <h2 className="text-sm font-semibold">x-cards options</h2>
+            </div>
+        </div>
+
         {renderTweetManager}
         <PresetColorList onSelect={handleColorChange} />
-        <div style={styles.label}>Width</div>
-        <div style={styles.widthButtonGridContainer}>
-            {['sm', 'md', 'lg', 'xl'].map(width => (
-                <button style={{
-                    ...styles.widthButton,
-                    ...(selectedWidth === width ? styles.activeButton : {}),
-                }} key={width} onClick={() => handleSelectWidth(width)}>
-                    {width}
-                </button>
-            ))}
+        <div>
+            <h3 className="text-sm font-semibold mb-2">WIDTH</h3>
+            <div
+                className='grid grid-cols-4 gap-2 w-full'
+            >
+                {['sm', 'md', 'lg', 'xl'].map(width => (
+                    <Button
+                        size={'sm'}
+                        className={
+                            selectedWidth === width ? 'bg-primary' : 'bg-[#262626]'
+                        }
+                        key={width} onClick={() => handleSelectWidth(width)}>
+                        {width}
+                    </Button>
+                ))}
+            </div>
 
         </div>
-        <div style={styles.label}>Style</div>
-        {/* <div style={styles.gridContainer}>
-            {cardStyles.map((style) => (
-                <button
-                    key={style}
-                    style={{
-                        ...styles.button,
-                        ...(tweetStyle === style ? styles.activeButton : {}),
-                    }}
-                    onClick={() => handleSelectCardStyle(style)}
-                >
-                    <span >{style}</span>
-                </button>
-            ))}
-        </div> */}
-        <div style={styles.label}>Format</div>
-        <div className='grid grid-cols-3 gap-2 w-full'>
-            {formats.map((format) => (
-                <button
-                    className='inline-flex items-center justify-center whitespace-nowrap 
-                    text-sm   rounded transition-colors duration-200 outline-none shadow-[0_0_0_2px_rgba(0,0,0,0.2)] bg-[#262626] text-white h-[2.5rem] px-4 py-2 cursor-pointer border-none hover:bg-[#363636]'
-                    key={format}
-                    style={{
-                        ...(selectedFormat === format ? styles.activeButton : {}),
-                    }}
-                    onClick={() => handleSelectFormat(format)}
-                >
-                    <span >{format}</span>
-                </button>
-            ))}
+        <PaddingControl></PaddingControl>
+        <TweetControl
+            onChange={(controls) => {
+                setCardConfig({ controls, });
+            }}
+        ></TweetControl>
+        <div>
+            <h3 className="text-sm font-semibold mb-2">FORMAT</h3>
+            <div className='grid grid-cols-4 gap-2 w-full'>
+                {formats.map((format) => (
+                    <Button
+                        size={'sm'}
+                        key={format}
+                        className={
+                            selectedFormat === format ? 'bg-primary' : 'bg-[#262626]'
+                        }
+                        style={{
+                            ...(selectedFormat === format ? styles.activeButton : {}),
+                        }}
+                        onClick={() => handleSelectFormat(format)}
+                    >
+                        <span >{format}</span>
+                    </Button>
+                ))}
+            </div>
         </div>
+
+        <FontControl></FontControl>
+
+        <ScaleControl value={cardConfig.scale} onChange={v => {
+            if (!isActivated) {
+                useTweetsStore.getState().setShowCodeDialog(true);
+                return;
+            }
+            setCardConfig({
+                scale: v,
+            });
+        }} />
+
         <button style={styles.button} onClick={handleDownloadImage}>
             <Download className=' h-4 w-4 mr-2' />
-            Download Image
+            Download
         </button>
         <button
             className='mb-[32px]'
             style={styles.button} onClick={handleCopyImage}>
             <Copy className=' h-4 w-4 mr-2' />
-            Copy Image
+            Copy
         </button>
 
         <span className='text-xs text-neutral-400 absolute  pt-2 bottom-1 right-4 '>
@@ -388,7 +389,6 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
                 <span> DM <a target='_blank' href="https://x.com/IndieDevr" className=' text-blue-500'>@IndieDevr</a>  unlock all features</span>
             </div>
             <div className=' flex  justify-end items-center'>
-                {/* <a target='_blank' href="https://github.com/hzeyuan/x-cards/issues" className=' '>submit you issues</a> */}
                 <a target="_blank" href="https://discord.gg/Prjas7Qh">
                     <svg
                         className="w-4 h-4 mr-2"
@@ -407,23 +407,31 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
                 </a>
             </div>
         </span>
-    </div>
+    </div >
 
 
     useEffect(() => {
         handlePreview(tweetInfo, tweets);
-    }, [activeTab, tweets, tweetStyle])
+    }, [activeTab, tweets, tweetStyle,
+        cardConfig.padding,
+        cardConfig.width,
+        cardConfig.colorIndex,
+        cardConfig.controls,
+        cardConfig.fontSize,
+        cardConfig.fontFamily,
+
+    ])
 
 
     return (
         <motion.div className=''
             layout
-            initial={{ width: isPreview ? '256px' : '576px' }}
-            animate={{ width: isPreview ? '256px' : '576px' }}
+            initial={{ width: isPreview ? '320px' : '696px' }}
+            animate={{ width: isPreview ? '320px' : '696px' }}
             transition={{ duration: 0.3 }}
             style={{
                 ...styles.container,
-                width: isPreview ? '256px' : '576px',
+                // width: isPreview ? '256px' : '696px',
             }}
             onMouseEnter={() => showIsPreview(false)}
             onMouseLeave={() => showIsPreview(true)}
@@ -445,7 +453,7 @@ export const PreviewToast: React.FC<PreviewToastProps> = ({ tweetInfo, tweetInfo
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
-                        className='max-w-[220px]'
+                        className='max-w-[224px] overflow-auto'
                     >
                         {renderControls}
                     </motion.div>

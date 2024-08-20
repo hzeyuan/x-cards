@@ -1,71 +1,52 @@
 import type { XConfig } from "@src/hooks/useCardStore";
-import { generateImage } from ".";
 
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-export const exportImage = async (format: string) => {
-    try {
-        const dataUrl = await generateImage({
-            format: format,
-        });
-        const link = document.createElement('a');
-        link.download = `export.${format}`;
-        link.href = dataUrl;
-        link.click();
-    } catch (err) {
-        console.error('Error exporting image:', err);
-    }
-};
 
 
-export const exportAsMarkdown = (tweetData: XConfig) => {
-    const {
-        username,
-        time,
-        text,
-        likes,
-        shares,
-        replies,
-        video,
-        images
-    } = tweetData;
+export const tweet2Markdown = (tweetData: XConfig[]) => {
+    const mdArray = tweetData.map((tweet) => {
+        const {
+            username,
+            time,
+            text,
+            likes,
+            shares,
+            replies,
+            video,
+            images
+        } = tweet;
 
-    const formattedDate = new Date(time * 1000).toLocaleString();
+        const formattedDate = new Date(time * 1000).toLocaleString();
 
-    let markdownContent = `# Tweet by ${username}\n\n`;
-    markdownContent += `*Posted on ${formattedDate}*\n\n`;
-    markdownContent += `${text}\n\n`;
+        let markdownContent = `# Tweet by ${username}\n\n`;
+        markdownContent += `*Posted on ${formattedDate}*\n\n`;
+        markdownContent += `${text}\n\n`;
 
-    if (video && video.poster) {
-        markdownContent += `![Video Thumbnail](${video.poster})\n\n`;
-        markdownContent += `*This tweet contains a video*\n\n`;
-    }
+        if (video && video.poster) {
+            markdownContent += `![Video Thumbnail](${video.poster})\n\n`;
+            markdownContent += `*This tweet contains a video*\n\n`;
+        }
 
-    if (images && images.length > 0) {
-        images.forEach((img, index) => {
-            markdownContent += `![Image ${index + 1}](${img})\n\n`;
-        });
-    }
+        if (images && images.length > 0) {
+            images.forEach((img, index) => {
+                markdownContent += `![Image ${index + 1}](${img})\n\n`;
+            });
+        }
 
-    markdownContent += `--- \n\n`;
-    markdownContent += `**Stats**\n\n`;
-    markdownContent += `Likes: ${likes}\n`;
-    markdownContent += `Shares: ${shares}\n`;
-    markdownContent += `Replies: ${replies}\n\n`;
+        markdownContent += `--- \n\n`;
+        markdownContent += `**Stats**\n\n`;
+        markdownContent += `Likes: ${likes}\n`;
+        markdownContent += `Shares: ${shares}\n`;
+        markdownContent += `Replies: ${replies}\n\n`;
 
-    // 创建并下载 Markdown 文件
-    const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `tweet_${username}_${time}.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+        // 创建并下载 Markdown 文件
 
-    return markdownContent; // 返回生成的Markdown内容，以便在需要时使用
+
+        return markdownContent;
+    });
+    return mdArray.join('\n\n');
 };
 
 
@@ -128,8 +109,6 @@ export const exportAsAsset = async (tweetData: XConfig) => {
         throw error; // 重新抛出错误，允许调用者处理它
     }
 };
-
-
 
 
 export const exportAsJSON = async (data: Object) => {

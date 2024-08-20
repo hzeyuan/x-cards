@@ -35,8 +35,8 @@ const googleFonts = [
 
 export default function GoogleFontSelector({ onFontChange }) {
     // const [selectedFont, setSelectedFont] = useState('sans-serif');
-    const setFontStyles = useCardStore((state) => state.setFontStyles);
-    const fontFamily = useCardStore((state) => state.fontStyles.fontFamily);
+    const setFontStyles = useCardStore((state) => state.updateCardStyles);
+    const fontFamily = useCardStore((state) => state.cardStyles.fontFamily);
 
 
     const loadFont = (fontName) => {
