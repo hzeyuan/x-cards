@@ -28,7 +28,22 @@ const Hero = () => {
                                 <Image src={chromeSvg} alt="Chrome Extension" className="w-6 h-6" />
                                 Download Extension
                             </div>
+
                         </a>
+
+                        <a
+                            href="https://www.producthunt.com/posts/x-cards?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-x-cards"
+                            target="_blank"
+                        >
+                            <img
+                                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=481821&theme=light"
+                                alt="X Cards - Simple, Beautiful Tweets with Card Integration on X.com | Product Hunt"
+                                style={{ width: 250, height: 54 }}
+                                width={250}
+                                height={54}
+                            />
+                        </a>
+
                     </div>
                 </div>
                 <VideoSection />
