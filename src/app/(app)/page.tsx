@@ -1,10 +1,9 @@
 import * as _ from 'lodash-es';
 import Hero from "./components/hero";
-// import { CardGenerator } from "./components/card-generator";
 import { cn } from "@lib/utils";
 import gradientBottomSvg from '@assets/gradient-bottom.svg';
 import { FooterSection } from './components/sections/footer';
-import FeaturesGridSection from './components/sections/Features';
+import FeaturesGridSection from './components/sections/FeaturesGridSection';
 
 const HomePage = () => {
 
