@@ -144,7 +144,6 @@ export const render: PlasmoRender<Element> = async ({
     const style = document.createElement("style")
 
     const wrapper = document.createElement('xcards-ui')
-    wrapper.setAttribute('data-wxt-shadow-root', '')
 
 
     // Attach the wrapper to the document body
