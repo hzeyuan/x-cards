@@ -93,7 +93,7 @@ const grid = [
 
 ];
 
-export const Grid = ({
+const Grid = ({
 	pattern,
 	size,
 }: {
@@ -123,7 +123,7 @@ export const Grid = ({
 	);
 };
 
-export function GridPattern({ width, height, x, y, squares, ...props }: any) {
+function GridPattern({ width, height, x, y, squares, ...props }: any) {
 	const patternId = useId();
 
 	return (
