@@ -3,7 +3,7 @@
 import { BookCopy, LayoutGrid, ListCollapse, Palette } from "lucide-react";
 import { useId } from "react";
 
-export function FeaturesGridSection() {
+ function FeaturesGridSection() {
 	return (
 		<>
 			<div className="relative py-32">
@@ -164,3 +164,6 @@ function GridPattern({ width, height, x, y, squares, ...props }: any) {
 		</svg>
 	);
 }
+
+
+export default FeaturesGridSection;
