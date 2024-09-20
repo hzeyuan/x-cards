@@ -82,6 +82,8 @@ export const CardWidths = {
 };
 
 export interface XConfig {
+    //发帖账号URL
+    authorUrl: string,
     url: string;
     avatar: string,
     username: string,
@@ -182,6 +184,7 @@ export const useCardStore = create<CardStore>(
             })
         },
         xConfig: [{
+            authorUrl:'',
             username: '@FeigelC35583',
             images: [],
             // images: ['https://pbs.twimg.com/media/GTzQPUhbQAA0mwk?format=jpg&name=large', 'https://pbs.twimg.com/media/GUa0UwYaoAAYPCY?format=jpg'],
