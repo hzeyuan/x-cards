@@ -1,16 +1,17 @@
-import type { XConfig } from "@src/hooks/useCardStore";
+import type {XConfig} from "@src/hooks/useCardStore";
 
 import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-
+import {saveAs} from 'file-saver';
 
 
 export const tweet2Markdown = (tweetData: XConfig[]) => {
     const mdArray = tweetData.map((tweet) => {
         const {
+            authorUrl,
             username,
             time,
             text,
+            url,
             likes,
             shares,
             replies,
@@ -35,6 +36,15 @@ export const tweet2Markdown = (tweetData: XConfig[]) => {
             });
         }
 
+        //账号URL
+        markdownContent += `[${username}](${authorUrl})\n\n`;
+
+        //帖子URL
+        const displayText = text.replace(/\n/g, '').length > 100
+            ? `${text.replace(/\n/g, '').substring(0, 100)}...`
+            : text.replace(/\n/g, '');
+        markdownContent += `[${displayText}](${url})\n\n`;
+
         markdownContent += `--- \n\n`;
         markdownContent += `**Stats**\n\n`;
         markdownContent += `Likes: ${likes}\n`;
@@ -42,7 +52,6 @@ export const tweet2Markdown = (tweetData: XConfig[]) => {
         markdownContent += `Replies: ${replies}\n\n`;
 
         // 创建并下载 Markdown 文件
-
 
         return markdownContent;
     });
@@ -52,7 +61,7 @@ export const tweet2Markdown = (tweetData: XConfig[]) => {
 
 export const exportAsAsset = async (tweetData: XConfig) => {
 
-    const { username, images, video, text } = tweetData;
+    const {username, images, video, text} = tweetData;
 
     // 创建一个新的 JSZip 实例
     const zip = new JSZip();
@@ -97,7 +106,7 @@ export const exportAsAsset = async (tweetData: XConfig) => {
         }
 
         // 生成 zip 文件
-        const content = await zip.generateAsync({ type: "blob" });
+        const content = await zip.generateAsync({type: "blob"});
 
         const zipName = '' || `twwet_assets_${username || 'none'}_${text.slice(0, 15)}`;
         // 使用 file-saver 保存文件
@@ -113,7 +122,7 @@ export const exportAsAsset = async (tweetData: XConfig) => {
 
 export const exportAsJSON = async (data: Object) => {
     const jsonContent = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const blob = new Blob([jsonContent], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

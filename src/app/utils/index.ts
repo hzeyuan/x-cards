@@ -158,6 +158,7 @@ export const sendMessageToIframe = async (name: string, data: any, timeout: numb
 
 export function extractTweetInfo(postElement) {
   const tweet: XConfig = {
+    authorUrl: '',
     url: '',
     avatar: "",
     username: "",
@@ -171,7 +172,6 @@ export function extractTweetInfo(postElement) {
     likes: 0,
   };
 
-
   // 提取头像
   tweet.avatar = postElement.querySelector('img[draggable="true"]')?.src;
 
@@ -179,10 +179,17 @@ export function extractTweetInfo(postElement) {
   const userInfoDiv = postElement.querySelector('[data-testid="User-Name"]');
   if (!userInfoDiv) return;
 
-  const urls = Array.from(userInfoDiv.querySelectorAll('[data-testid="User-Name"] a'))?.map(e => e.href);
-  // console.log('urls', urls);
-  const XPostUrl = urls.find((url) => url.includes('status'));
-  tweet.url = XPostUrl;
+  const authorUrls = Array.from(userInfoDiv.querySelectorAll('[data-testid="User-Name"] a'))?.map(e => e.href);
+  //console.log('authorUrls', authorUrls);
+
+  //账号URL
+  tweet.authorUrl = authorUrls.length > 0 ? authorUrls[0] : null;
+
+  //帖子URL
+  const xPostStatusUrls = Array.from(postElement.querySelectorAll('a[href*="/status/"]')).map(a => a.href);
+  //console.log('xPostStatusUrls', xPostStatusUrls);
+  tweet.url = xPostStatusUrls.length > 0 ? xPostStatusUrls[0] : null;
+
   tweet.username = userInfoDiv.querySelector('div[dir="ltr"]').textContent;
   let timeStr = userInfoDiv.querySelector('time')?.getAttribute('datetime');
   // console.log('timeStr', timeStr, postElement.querySelector('time'));
